@@ -1,0 +1,135 @@
+{
+  "app": {
+    "success": "Connecté avec succès !"
+  },
+  "auth": {
+    "title": "Embarquement",
+    "description": "Cliquez ci-dessous pour vous connecter à votre compte Netatmo.",
+    "loginButton": "Se connecter avec Netatmo",
+    "hint": "Configurez d'abord le Client ID ci-dessus.",
+    "codeVerifierNotFound": "Code verifier introuvable.",
+    "errorStatus": "Erreur {status}: {error}",
+    "unknown": "Inconnu",
+    "oauthError": "Erreur OAuth : {error} - {description}",
+    "noDescription": "Aucune description",
+    "securityError": "Erreur de sécurité : state invalide."
+  },
+  "config": {
+    "title": "Centre de commande",
+    "description": "Récupérez ces informations sur",
+    "clientId": "Client ID",
+    "clientSecret": "Client Secret",
+    "redirectUri": "URI de redirection",
+    "scopesLabel": "Scopes (séparés par des espaces)",
+    "saveButton": "Enregistrer",
+    "clearButton": "Nettoyer le LocalStorage",
+    "confirmTitle": "Confirmer le nettoyage",
+    "confirmMessage": "Êtes-vous sûr de vouloir tout supprimer ? Cela effacera votre configuration et votre token d'accès.",
+    "saved": "Configuration enregistrée !",
+    "cleared": "LocalStorage nettoyé !",
+    "clientIdPlaceholder": "Ex: 5f4e3d2c1b9a8...",
+    "clientSecretPlaceholder": "Ex: a1b2c3d4e5...",
+    "redirectUriPlaceholder": "Ex: https://ctamisier.github.io/monatmo/"
+  },
+  "home": {
+    "title": "Stations",
+    "loading": "Chargement des maisons...",
+    "empty": "Aucune maison trouvée.",
+    "fallbackName": "Maison sans nom",
+    "unknownError": "Erreur inconnue"
+  },
+  "temperature": {
+    "title": "Thermorégulation",
+    "empty": "Aucune pièce avec thermostat trouvée.",
+    "fallbackRoom": "Pièce {id}",
+    "setpoint": "Consigne:",
+    "battery": "Batterie:",
+    "valves": "Valves",
+    "chart": {
+      "xAxis": "Date / Heure",
+      "yAxis": "Température (°C)",
+      "history": "Historique",
+      "resetZoom": "Réinitialiser le zoom",
+      "dragDuration": "{n} jour | {n} jours",
+      "dragDurationHours": "{n} heure | {n} heures",
+      "scales": {
+        "30min": "30 min",
+        "1hour": "1 h",
+        "3hours": "3 h",
+        "1day": "24 h",
+        "1week": "1 sem",
+        "1month": "1 mois"
+      }
+    },
+    "batteryStates": {
+      "very_low": "très faible",
+      "low": "faible",
+      "medium": "moyenne",
+      "high": "haute",
+      "full": "pleine"
+    },
+    "loadingError": "Erreur lors du chargement des données",
+    "updateError": "Erreur lors de la mise à jour"
+  },
+  "light": {
+    "title": "Illuminations",
+    "empty": "Aucune lumière NLFN trouvée.",
+    "fallbackName": "Lumière {id}",
+    "on": "Allumé",
+    "off": "Éteint",
+    "selectHomeFirst": "Veuillez sélectionner une maison d'abord.",
+    "controlError": "Erreur lors de la commande"
+  },
+  "shutter": {
+    "title": "Boucliers solaire",
+    "empty": "Aucun volet roulant trouvé dans cette maison.",
+    "fallbackName": "Volet {id}",
+    "open": "Ouvrir",
+    "close": "Fermer",
+    "stop": "Stop",
+    "send": "Envoyer",
+    "actionOpen": "OUVERTURE",
+    "actionClose": "FERMETURE",
+    "actionStop": "ARRÊT",
+    "actionPosition": "Position {position}%",
+    "commandSent": "Commande envoyée : {action}"
+  },
+  "token": {
+    "title": "Jeton orbital",
+    "accessToken": "Access Token :",
+    "refreshToken": "Refresh Token :",
+    "expiresIn": "Expire dans :",
+    "seconds": "secondes",
+    "scopes": "Scopes :",
+    "logoutButton": "Se déconnecter"
+  },
+  "dialog": {
+    "cancel": "Non",
+    "confirm": "Oui"
+  },
+  "common": {
+    "card": "Carte",
+    "notAvailable": "N/A",
+    "unknownRoom": "Pièce inconnue"
+  },
+  "netatmo": {
+    "loginRequired": "Veuillez vous connecter d'abord.",
+    "invalidToken": "Token invalide",
+    "unknownError": "Erreur inconnue"
+  },
+  "errors": {
+    "loadingData": "Erreur lors du chargement des données",
+    "updateError": "Erreur lors de la mise à jour",
+    "commandError": "Erreur lors de la commande",
+    "sendCommandError": "Erreur lors de l'envoi de la commande",
+    "selectHomeFirst": "Veuillez sélectionner une maison d'abord.",
+    "selectShutterFirst": "Veuillez sélectionner un volet d'abord.",
+    "invalidPosition": "Veuillez entrer une position valide (0-100).",
+    "unknownAction": "Action inconnue.",
+    "codeVerifierNotFound": "Code verifier introuvable.",
+    "errorStatus": "Erreur {status}: {error}",
+    "oauthError": "Erreur OAuth : {error} - {description}",
+    "noDescription": "Aucune description",
+    "securityError": "Erreur de sécurité : state invalide."
+  }
+}

@@ -1,0 +1,202 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+body {
+  font-family: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+  background: #06040e;
+  color: #d8cce8;
+  letter-spacing: 0.01em;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  color: #e8dff5;
+}
+
+h2, h3 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #f4845f 0%, #e05297 40%, #7b5ea7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(224, 82, 151, 0.3));
+}
+
+a {
+  color: #f4845f;
+  text-decoration: none;
+}
+
+/* ── PANEL ── */
+
+.card-custom {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 85% 10%, rgba(123, 94, 167, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 15% 90%, rgba(244, 132, 95, 0.06) 0%, transparent 60%),
+    linear-gradient(160deg, rgba(10, 8, 20, 0.97) 0%, rgba(16, 12, 28, 0.95) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(123, 94, 167, 0.15);
+  box-shadow:
+    0 4px 40px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(123, 94, 167, 0.04),
+    inset 0 1px 0 rgba(244, 132, 95, 0.06);
+}
+
+.card-custom::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse 500px 250px at 90% 0%, rgba(244, 132, 95, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 350px 180px at 10% 100%, rgba(123, 94, 167, 0.06) 0%, transparent 70%);
+}
+
+.card-custom::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(244, 132, 95, 0.3) 30%, rgba(123, 94, 167, 0.3) 70%, transparent);
+}
+
+/* ── INNER CARD ── */
+
+.card-inner {
+  margin-bottom: 0;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.card-inner:hover {
+  border-color: rgba(224, 82, 151, 0.35);
+  box-shadow: 0 0 30px rgba(224, 82, 151, 0.06);
+  background: rgba(224, 82, 151, 0.03);
+}
+
+/* ── SHARED BUTTONS ── */
+
+.btn-nebula {
+  position: relative;
+  overflow: hidden;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, rgba(123, 94, 167, 0.2), rgba(224, 82, 151, 0.1));
+  border: 1px solid rgba(123, 94, 167, 0.35);
+  color: #c97bdb;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-nebula:hover {
+  transform: scale(1.05);
+}
+
+.btn-nebula:active {
+  transform: scale(0.95);
+}
+
+.btn-nebula::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(123, 94, 167, 0.15), transparent 70%);
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.btn-nebula:hover::after {
+  opacity: 1;
+}
+
+.btn-nebula-ghost {
+  position: relative;
+  overflow: hidden;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, rgba(216, 204, 232, 0.06), rgba(216, 204, 232, 0.02));
+  border: 1px solid rgba(216, 204, 232, 0.12);
+  color: #d8cce8;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-nebula-ghost:hover {
+  transform: scale(1.05);
+}
+
+.btn-nebula-ghost:active {
+  transform: scale(0.95);
+}
+
+.btn-nebula-ghost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(216, 204, 232, 0.06), transparent 70%);
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.btn-nebula-ghost:hover::after {
+  opacity: 1;
+}
+
+.btn-stop {
+  position: relative;
+  overflow: hidden;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, rgba(224, 82, 151, 0.15), rgba(224, 82, 151, 0.05));
+  border: 1px solid rgba(224, 82, 151, 0.3);
+  color: #e05297;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-stop:hover {
+  transform: scale(1.05);
+}
+
+.btn-stop:active {
+  transform: scale(0.95);
+}
+
+.btn-stop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(224, 82, 151, 0.12), transparent 70%);
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.btn-stop:hover::after {
+  opacity: 1;
+}
