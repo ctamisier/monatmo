@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Erfolgreich verbunden!"
+  },
+  "auth": {
+    "title": "Einstieg",
+    "tagline": "Ihr Zuhause, unter einem guten Stern",
+    "description": "Verbinden Sie sich, um den Komfort Ihres Zuhauses zu steuern.",
+    "loginButton": "Mit Netatmo verbinden",
+    "hint": "Netatmo OAuth · sichere Verbindung",
+    "codeVerifierNotFound": "Code-Verifier nicht gefunden.",
+    "errorStatus": "Fehler {status}: {error}",
+    "unknown": "Unbekannt",
+    "oauthError": "OAuth-Fehler: {error} - {description}",
+    "noDescription": "Keine Beschreibung",
+    "securityError": "Sicherheitsfehler: ungültiger State."
+  },
+  "config": {},
+  "home": {
+    "title": "Stationen",
+    "loading": "Häuser werden geladen...",
+    "empty": "Kein Zuhause gefunden.",
+    "fallbackName": "Haus ohne Namen",
+    "unknownError": "Unbekannter Fehler",
+    "outdoorTemp": "Außentemperatur"
+  },
+  "weather": {
+    "title": "Aktuelles Wetter",
+    "humidity": "Feuchtigkeit",
+    "gust": "Böen",
+    "noData": "Keine Wetterdaten verfügbar",
+    "gpsError": "Standortzugriff verweigert"
+  },
+  "temperature": {
+    "title": "Thermostat",
+    "empty": "Kein Raum mit Thermostat gefunden.",
+    "fallbackRoom": "Raum {id}",
+    "setpoint": "Sollwert:",
+    "battery": "Batterie:",
+    "valves": "Ventile",
+    "chart": {
+      "xAxis": "Datum / Uhrzeit",
+      "yAxis": "Temperatur (°C)",
+      "resetZoom": "Zoom zurücksetzen",
+      "outdoorLabel": "Draußen (Open-Meteo)",
+      "dragDuration": "{n} Tag | {n} Tage",
+      "dragDurationHours": "{n} Stunde | {n} Stunden",
+      "scales": {
+        "30min": "30 Min",
+        "1hour": "1 Std",
+        "3hours": "3 Std",
+        "1day": "24 Std",
+        "1week": "1 Wo",
+        "1month": "1 Mon"
+      }
+    },
+    "batteryStates": {
+      "very_low": "sehr niedrig",
+      "low": "niedrig",
+      "medium": "mittel",
+      "high": "hoch",
+      "full": "voll"
+    },
+    "loadingError": "Fehler beim Laden der Daten",
+    "updateError": "Fehler beim Aktualisieren der Daten"
+  },
+  "light": {
+    "title": "Beleuchtung",
+    "empty": "Keine NLFN-Licht gefunden.",
+    "fallbackName": "Licht {id}",
+    "on": "Ein",
+    "off": "Aus",
+    "selectHomeFirst": "Bitte wählen Sie zuerst ein Zuhause aus.",
+    "controlError": "Fehler beim Senden des Befehls"
+  },
+  "shutter": {
+    "title": "Sonnenschilde",
+    "empty": "Kein Rolladen in diesem Zuhause gefunden.",
+    "fallbackName": "Rollladen {id}",
+    "open": "Öffnen",
+    "close": "Schließen",
+    "stop": "Stopp",
+    "send": "Senden",
+    "actionOpen": "Öffnen",
+    "actionClose": "Schließen",
+    "actionStop": "Stopp",
+    "actionPosition": "Position {position}%",
+    "commandSent": "Befehl gesendet: {action}"
+  },
+  "token": {
+    "logoutButton": "Abmelden"
+  },
+  "dialog": {
+    "cancel": "Nein",
+    "confirm": "Ja"
+  },
+  "common": {
+    "card": "Karte",
+    "notAvailable": "k. A.",
+    "unknownRoom": "Unbekannter Raum"
+  },
+  "netatmo": {
+    "loginRequired": "Bitte melden Sie sich zuerst an.",
+    "invalidToken": "Ungültiges Token",
+    "unknownError": "Unbekannter Fehler"
+  },
+  "errors": {
+    "loadingData": "Fehler beim Laden der Daten",
+    "updateError": "Fehler beim Aktualisieren der Daten",
+    "commandError": "Fehler beim Senden des Befehls",
+    "sendCommandError": "Fehler beim Senden des Befehls",
+    "selectHomeFirst": "Bitte wählen Sie zuerst ein Zuhause aus.",
+    "selectShutterFirst": "Bitte wählen Sie zuerst einen Rolladen aus.",
+    "invalidPosition": "Bitte geben Sie eine gültige Position ein (0-100).",
+    "unknownAction": "Unbekannte Aktion.",
+    "codeVerifierNotFound": "Code-Verifier nicht gefunden.",
+    "errorStatus": "Fehler {status}: {error}",
+    "oauthError": "OAuth-Fehler: {error} - {description}",
+    "noDescription": "Keine Beschreibung",
+    "securityError": "Sicherheitsfehler: ungültiger State."
+  }
+}

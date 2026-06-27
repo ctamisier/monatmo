@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "monatmo",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-07-12",
+  "vars": {
+    "NETATMO_CLIENT_ID": "6a5398f57fcc9952f104d502",
+    "NETATMO_SCOPE": "read_thermostat write_thermostat read_magellan write_magellan",
+    "NETATMO_REDIRECT_URI": "https://monatmo.clement-tamisier.workers.dev/"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}

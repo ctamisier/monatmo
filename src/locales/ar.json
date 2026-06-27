@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "تم الاتصال بنجاح!"
+  },
+  "auth": {
+    "title": "الصعود",
+    "tagline": "منزلك، تحت نجمة حظ سعيدة",
+    "description": "سجّل الدخول لإدارة راحة منزلك.",
+    "loginButton": "تسجيل الدخول عبر Netatmo",
+    "hint": "Netatmo OAuth · اتصال آمن",
+    "codeVerifierNotFound": "لم يتم العثور على مُتحقق من الرمز.",
+    "errorStatus": "خطأ {status}: {error}",
+    "unknown": "غير معروف",
+    "oauthError": "خطأ OAuth: {error} - {description}",
+    "noDescription": "بدون وصف",
+    "securityError": "خطأ أمني: state غير صالح."
+  },
+  "config": {},
+  "home": {
+    "title": "المحطات",
+    "loading": "جارٍ تحميل المنازل...",
+    "empty": "لم يتم العثور على منزل.",
+    "fallbackName": "منزل بدون اسم",
+    "unknownError": "خطأ غير معروف",
+    "outdoorTemp": "درجة حرارة خارجية"
+  },
+  "weather": {
+    "title": "طقس الحالي",
+    "humidity": "رطوبة",
+    "gust": "هبوات",
+    "noData": "لا تتوفر بيانات الطقس",
+    "gpsError": "تم رفض الوصول إلى الموقع"
+  },
+  "temperature": {
+    "title": "الثرموستات",
+    "empty": "لم يتم العثور على غرفة بثرموستات.",
+    "fallbackRoom": "غرفة {id}",
+    "setpoint": "الضبط:",
+    "battery": "البطارية:",
+    "valves": "الصمامات",
+    "chart": {
+      "xAxis": "التاريخ / الوقت",
+      "yAxis": "درجة الحرارة (°C)",
+      "resetZoom": "إعادة تعيين التكبير",
+      "outdoorLabel": "الخارج (Open-Meteo)",
+      "dragDuration": "{n} يوم | {n} أيام",
+      "dragDurationHours": "{n} ساعة | {n} ساعات",
+      "scales": {
+        "30min": "30 دقيقة",
+        "1hour": "1 ساعة",
+        "3hours": "3 ساعات",
+        "1day": "24 ساعة",
+        "1week": "1 أسبوع",
+        "1month": "1 شهر"
+      }
+    },
+    "batteryStates": {
+      "very_low": "منخفض جداً",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "مرتفع",
+      "full": "ممتلئ"
+    },
+    "loadingError": "خطأ في تحميل البيانات",
+    "updateError": "خطأ في تحديث البيانات"
+  },
+  "light": {
+    "title": "الإضاءات",
+    "empty": "لم يتم العثور على إضاءة NLFN.",
+    "fallbackName": "إضاءة {id}",
+    "on": "تشغيل",
+    "off": "إيقاف",
+    "selectHomeFirst": "يرجى اختيار منزل أولاً.",
+    "controlError": "خطأ في إرسال الأمر"
+  },
+  "shutter": {
+    "title": "الواقيات الشمسية",
+    "empty": "لم يتم العثور على ستارة roll-up في هذا المنزل.",
+    "fallbackName": "ستارة {id}",
+    "open": "فتح",
+    "close": "إغلاق",
+    "stop": "إيقاف",
+    "send": "إرسال",
+    "actionOpen": "فتح",
+    "actionClose": "إغلاق",
+    "actionStop": "إيقاف",
+    "actionPosition": "الموضع {position}%",
+    "commandSent": "تم إرسال الأمر: {action}"
+  },
+  "token": {
+    "logoutButton": "تسجيل الخروج"
+  },
+  "dialog": {
+    "cancel": "لا",
+    "confirm": "نعم"
+  },
+  "common": {
+    "card": "بطاقة",
+    "notAvailable": "غير متاح",
+    "unknownRoom": "غرفة غير معروفة"
+  },
+  "netatmo": {
+    "loginRequired": "يرجى تسجيل الدخول أولاً.",
+    "invalidToken": "رمز غير صالح",
+    "unknownError": "خطأ غير معروف"
+  },
+  "errors": {
+    "loadingData": "خطأ في تحميل البيانات",
+    "updateError": "خطأ في تحديث البيانات",
+    "commandError": "خطأ في إرسال الأمر",
+    "sendCommandError": "خطأ في إرسال الأمر",
+    "selectHomeFirst": "يرجى اختيار منزل أولاً.",
+    "selectShutterFirst": "يرجى اختيار ستارة أولاً.",
+    "invalidPosition": "يرجى إدخال موضع صالح (0-100).",
+    "unknownAction": "إجراء غير معروف.",
+    "codeVerifierNotFound": "لم يتم العثور على مُتحقق من الرمز.",
+    "errorStatus": "خطأ {status}: {error}",
+    "oauthError": "خطأ OAuth: {error} - {description}",
+    "noDescription": "بدون وصف",
+    "securityError": "خطأ أمني: state غير صالح."
+  }
+}

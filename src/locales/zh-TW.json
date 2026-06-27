@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "連線成功！"
+  },
+  "auth": {
+    "title": "登入",
+    "tagline": "您的家，在幸運之星下",
+    "description": "登入以管理您的家居舒適環境。",
+    "loginButton": "使用 Netatmo 登入",
+    "hint": "Netatmo OAuth · 安全連線",
+    "codeVerifierNotFound": "找不到代碼驗證器。",
+    "errorStatus": "錯誤 {status}: {error}",
+    "unknown": "未知",
+    "oauthError": "OAuth 錯誤: {error} - {description}",
+    "noDescription": "無描述",
+    "securityError": "安全錯誤: 無效的 state。"
+  },
+  "config": {},
+  "home": {
+    "title": "站點",
+    "loading": "載入家庭中...",
+    "empty": "找不到家庭。",
+    "fallbackName": "未命名家庭",
+    "unknownError": "未知錯誤",
+    "outdoorTemp": "室外溫度"
+  },
+  "weather": {
+    "title": "當前天氣",
+    "humidity": "濕度",
+    "gust": "陣風",
+    "noData": "暫無天氣資料",
+    "gpsError": "定位權限被拒絕"
+  },
+  "temperature": {
+    "title": "恆溫器",
+    "empty": "找不到帶恆溫器的房間。",
+    "fallbackRoom": "房間 {id}",
+    "setpoint": "設定值:",
+    "battery": "電池:",
+    "valves": "閥門",
+    "chart": {
+      "xAxis": "日期 / 時間",
+      "yAxis": "溫度 (°C)",
+      "resetZoom": "重置縮放",
+      "outdoorLabel": "室外 (Open-Meteo)",
+      "dragDuration": "{n} 天 | {n} 天",
+      "dragDurationHours": "{n} 小時 | {n} 小時",
+      "scales": {
+        "30min": "30 分",
+        "1hour": "1 小時",
+        "3hours": "3 小時",
+        "1day": "24 小時",
+        "1week": "1 週",
+        "1month": "1 月"
+      }
+    },
+    "batteryStates": {
+      "very_low": "極低",
+      "low": "低",
+      "medium": "中等",
+      "high": "高",
+      "full": "滿電"
+    },
+    "loadingError": "載入資料錯誤",
+    "updateError": "更新資料錯誤"
+  },
+  "light": {
+    "title": "照明",
+    "empty": "找不到 NLFN 燈光。",
+    "fallbackName": "燈光 {id}",
+    "on": "開啟",
+    "off": "關閉",
+    "selectHomeFirst": "請先選擇一個家庭。",
+    "controlError": "傳送命令錯誤"
+  },
+  "shutter": {
+    "title": "太陽能遮陽板",
+    "empty": "此家庭中找不到捲簾。",
+    "fallbackName": "捲簾 {id}",
+    "open": "開啟",
+    "close": "關閉",
+    "stop": "停止",
+    "send": "傳送",
+    "actionOpen": "開啟",
+    "actionClose": "關閉",
+    "actionStop": "停止",
+    "actionPosition": "位置 {position}%",
+    "commandSent": "命令已傳送: {action}"
+  },
+  "token": {
+    "logoutButton": "登出"
+  },
+  "dialog": {
+    "cancel": "否",
+    "confirm": "是"
+  },
+  "common": {
+    "card": "卡片",
+    "notAvailable": "無",
+    "unknownRoom": "未知房間"
+  },
+  "netatmo": {
+    "loginRequired": "請先登入。",
+    "invalidToken": "無效令牌",
+    "unknownError": "未知錯誤"
+  },
+  "errors": {
+    "loadingData": "載入資料錯誤",
+    "updateError": "更新資料錯誤",
+    "commandError": "傳送命令錯誤",
+    "sendCommandError": "傳送命令錯誤",
+    "selectHomeFirst": "請先選擇一個家庭。",
+    "selectShutterFirst": "請先選擇一個捲簾。",
+    "invalidPosition": "請輸入有效位置 (0-100)。",
+    "unknownAction": "未知操作。",
+    "codeVerifierNotFound": "找不到代碼驗證器。",
+    "errorStatus": "錯誤 {status}: {error}",
+    "oauthError": "OAuth 錯誤: {error} - {description}",
+    "noDescription": "無描述",
+    "securityError": "安全錯誤: 無效的 state。"
+  }
+}

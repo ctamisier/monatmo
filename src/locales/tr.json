@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Bağlantı başarılı!"
+  },
+  "auth": {
+    "title": "Biniş",
+    "tagline": "Eviniz, yıldızların altında",
+    "description": "Evinizin konforunu yönetmek için bağlanın.",
+    "loginButton": "Netatmo ile bağlan",
+    "hint": "Netatmo OAuth · güvenli bağlantı",
+    "codeVerifierNotFound": "Code verifier bulunamadı.",
+    "errorStatus": "Hata {status}: {error}",
+    "unknown": "Bilinmeyen",
+    "oauthError": "OAuth hatası: {error} - {description}",
+    "noDescription": "Açıklama yok",
+    "securityError": "Güvenlik hatası: geçersiz state."
+  },
+  "config": {},
+  "home": {
+    "title": "İstasyonlar",
+    "loading": "Evler yükleniyor...",
+    "empty": "Ev bulunamadı.",
+    "fallbackName": "İsimsiz ev",
+    "unknownError": "Bilinmeyen hata",
+    "outdoorTemp": "Dış mekan sıcaklığı"
+  },
+  "weather": {
+    "title": "Güncel hava durumu",
+    "humidity": "nem",
+    "gust": "rüzgar",
+    "noData": "Hava durumu verisi yok",
+    "gpsError": "Konum erişimi reddedildi"
+  },
+  "temperature": {
+    "title": "Termostat",
+    "empty": "Termostatlı oda bulunamadı.",
+    "fallbackRoom": "Oda {id}",
+    "setpoint": "Ayar:",
+    "battery": "Pil:",
+    "valves": "Valfler",
+    "chart": {
+      "xAxis": "Tarih / Saat",
+      "yAxis": "Sıcaklık (°C)",
+      "resetZoom": "Yakınlaştırmayı sıfırla",
+      "outdoorLabel": "Dış mekan (Open-Meteo)",
+      "dragDuration": "{n} gün | {n} gün",
+      "dragDurationHours": "{n} saat | {n} saat",
+      "scales": {
+        "30min": "30 dk",
+        "1hour": "1 sa",
+        "3hours": "3 sa",
+        "1day": "24 sa",
+        "1week": "1 hf",
+        "1month": "1 ay"
+      }
+    },
+    "batteryStates": {
+      "very_low": "çok düşük",
+      "low": "düşük",
+      "medium": "orta",
+      "high": "yüksek",
+      "full": "dolu"
+    },
+    "loadingError": "Veri yüklenirken hata",
+    "updateError": "Veri güncellenirken hata"
+  },
+  "light": {
+    "title": "Aydınlatmalar",
+    "empty": "NLFN ışığı bulunamadı.",
+    "fallbackName": "Işık {id}",
+    "on": "Açık",
+    "off": "Kapalı",
+    "selectHomeFirst": "Lütfen önce bir ev seçin.",
+    "controlError": "Komut gönderilirken hata"
+  },
+  "shutter": {
+    "title": "Güneş kalkanları",
+    "empty": "Bu evde panjur bulunamadı.",
+    "fallbackName": "Panjur {id}",
+    "open": "Aç",
+    "close": "Kapat",
+    "stop": "Dur",
+    "send": "Gönder",
+    "actionOpen": "Aç",
+    "actionClose": "Kapat",
+    "actionStop": "Dur",
+    "actionPosition": "Konum {position}%",
+    "commandSent": "Komut gönderildi: {action}"
+  },
+  "token": {
+    "logoutButton": "Çıkış"
+  },
+  "dialog": {
+    "cancel": "Hayır",
+    "confirm": "Evet"
+  },
+  "common": {
+    "card": "Kart",
+    "notAvailable": "Yok",
+    "unknownRoom": "Bilinmeyen oda"
+  },
+  "netatmo": {
+    "loginRequired": "Lütfen önce giriş yapın.",
+    "invalidToken": "Geçersiz token",
+    "unknownError": "Bilinmeyen hata"
+  },
+  "errors": {
+    "loadingData": "Veri yüklenirken hata",
+    "updateError": "Veri güncellenirken hata",
+    "commandError": "Komut gönderilirken hata",
+    "sendCommandError": "Komut gönderilirken hata",
+    "selectHomeFirst": "Lütfen önce bir ev seçin.",
+    "selectShutterFirst": "Lütfen önce bir panjur seçin.",
+    "invalidPosition": "Lütfen geçerli bir konum girin (0-100).",
+    "unknownAction": "Bilinmeyen eylem.",
+    "codeVerifierNotFound": "Code verifier bulunamadı.",
+    "errorStatus": "Hata {status}: {error}",
+    "oauthError": "OAuth hatası: {error} - {description}",
+    "noDescription": "Açıklama yok",
+    "securityError": "Güvenlik hatası: geçersiz state."
+  }
+}

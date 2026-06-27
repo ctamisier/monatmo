@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Connected successfully!"
+  },
+  "auth": {
+    "title": "Boarding",
+    "tagline": "Your home, under a lucky star",
+    "description": "Sign in to orchestrate the comfort of your home.",
+    "loginButton": "Sign in with Netatmo",
+    "hint": "Netatmo OAuth · secure connection",
+    "codeVerifierNotFound": "Code verifier not found.",
+    "errorStatus": "Error {status}: {error}",
+    "unknown": "Unknown",
+    "oauthError": "OAuth error: {error} - {description}",
+    "noDescription": "No description",
+    "securityError": "Security error: invalid state."
+  },
+  "config": {},
+  "home": {
+    "title": "Stations",
+    "loading": "Loading homes...",
+    "empty": "No home found.",
+    "fallbackName": "Unnamed home",
+    "unknownError": "Unknown error",
+    "outdoorTemp": "Outdoor temperature"
+  },
+  "weather": {
+    "title": "Current weather",
+    "humidity": "humidity",
+    "gust": "gusts",
+    "noData": "No weather data available",
+    "gpsError": "Location access denied"
+  },
+  "temperature": {
+    "title": "Thermostat",
+    "empty": "No room with thermostat found.",
+    "fallbackRoom": "Room {id}",
+    "setpoint": "Setpoint:",
+    "battery": "Battery:",
+    "valves": "Valves",
+    "chart": {
+      "xAxis": "Date / Time",
+      "yAxis": "Temperature (°C)",
+      "resetZoom": "Reset zoom",
+      "outdoorLabel": "Outdoor (Open-Meteo)",
+      "dragDuration": "{n} day | {n} days",
+      "dragDurationHours": "{n} hour | {n} hours",
+      "scales": {
+        "30min": "30 min",
+        "1hour": "1 h",
+        "3hours": "3 h",
+        "1day": "24 h",
+        "1week": "1 wk",
+        "1month": "1 mo"
+      }
+    },
+    "batteryStates": {
+      "very_low": "very low",
+      "low": "low",
+      "medium": "medium",
+      "high": "high",
+      "full": "full"
+    },
+    "loadingError": "Error loading data",
+    "updateError": "Error updating data"
+  },
+  "light": {
+    "title": "Lights",
+    "empty": "No NLFN light found.",
+    "fallbackName": "Light {id}",
+    "on": "On",
+    "off": "Off",
+    "selectHomeFirst": "Please select a home first.",
+    "controlError": "Error sending command"
+  },
+  "shutter": {
+    "title": "Solar shields",
+    "empty": "No roller shutter found in this home.",
+    "fallbackName": "Shutter {id}",
+    "open": "Open",
+    "close": "Close",
+    "stop": "Stop",
+    "send": "Send",
+    "actionOpen": "Open",
+    "actionClose": "Close",
+    "actionStop": "Stop",
+    "actionPosition": "Position {position}%",
+    "commandSent": "Command sent: {action}"
+  },
+  "token": {
+    "logoutButton": "Sign out"
+  },
+  "dialog": {
+    "cancel": "No",
+    "confirm": "Yes"
+  },
+  "common": {
+    "card": "Card",
+    "notAvailable": "N/A",
+    "unknownRoom": "Unknown room"
+  },
+  "netatmo": {
+    "loginRequired": "Please sign in first.",
+    "invalidToken": "Invalid token",
+    "unknownError": "Unknown error"
+  },
+  "errors": {
+    "loadingData": "Error loading data",
+    "updateError": "Error updating data",
+    "commandError": "Error sending command",
+    "sendCommandError": "Error sending command",
+    "selectHomeFirst": "Please select a home first.",
+    "selectShutterFirst": "Please select a shutter first.",
+    "invalidPosition": "Please enter a valid position (0-100).",
+    "unknownAction": "Unknown action.",
+    "codeVerifierNotFound": "Code verifier not found.",
+    "errorStatus": "Error {status}: {error}",
+    "oauthError": "OAuth error: {error} - {description}",
+    "noDescription": "No description",
+    "securityError": "Security error: invalid state."
+  }
+}

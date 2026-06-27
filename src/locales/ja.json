@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "接続に成功しました！"
+  },
+  "auth": {
+    "title": "搭乗",
+    "tagline": "あなたの家、幸運の星の下で",
+    "description": "快適な住環境をオーケストレートするためにサインインしてください。",
+    "loginButton": "Netatmoでサインイン",
+    "hint": "Netatmo OAuth · 安全な接続",
+    "codeVerifierNotFound": "コードベリファイアが見つかりません。",
+    "errorStatus": "エラー {status}: {error}",
+    "unknown": "不明",
+    "oauthError": "OAuthエラー: {error} - {description}",
+    "noDescription": "説明なし",
+    "securityError": "セキュリティエラー: 無効なstate。"
+  },
+  "config": {},
+  "home": {
+    "title": "ステーション",
+    "loading": "ホームを読み込み中...",
+    "empty": "ホームが見つかりません。",
+    "fallbackName": "名前のないホーム",
+    "unknownError": "不明なエラー",
+    "outdoorTemp": "屋外の気温"
+  },
+  "weather": {
+    "title": "現在の天気",
+    "humidity": "湿度",
+    "gust": "突風",
+    "noData": "天気データがありません",
+    "gpsError": "位置情報へのアクセスが拒否されました"
+  },
+  "temperature": {
+    "title": "サーモスタット",
+    "empty": "サーモスタットのある部屋が見つかりません。",
+    "fallbackRoom": "部屋 {id}",
+    "setpoint": "設定値:",
+    "battery": "バッテリー:",
+    "valves": "バルブ",
+    "chart": {
+      "xAxis": "日付 / 時間",
+      "yAxis": "温度 (°C)",
+      "resetZoom": "ズームをリセット",
+      "outdoorLabel": "屋外 (Open-Meteo)",
+      "dragDuration": "{n} 日 | {n} 日",
+      "dragDurationHours": "{n} 時間 | {n} 時間",
+      "scales": {
+        "30min": "30分",
+        "1hour": "1時間",
+        "3hours": "3時間",
+        "1day": "24時間",
+        "1week": "1週間",
+        "1month": "1ヶ月"
+      }
+    },
+    "batteryStates": {
+      "very_low": "非常に低い",
+      "low": "低い",
+      "medium": "中程度",
+      "high": "高い",
+      "full": "満充電"
+    },
+    "loadingError": "データの読み込みエラー",
+    "updateError": "データの更新エラー"
+  },
+  "light": {
+    "title": "ライティング",
+    "empty": "NLFNライトが見つかりません。",
+    "fallbackName": "ライト {id}",
+    "on": "オン",
+    "off": "オフ",
+    "selectHomeFirst": "先にホームを選択してください。",
+    "controlError": "コマンド送信エラー"
+  },
+  "shutter": {
+    "title": "ソーラーシールド",
+    "empty": "このホームにロールスクリーンが見つかりません。",
+    "fallbackName": "スクリーン {id}",
+    "open": "開ける",
+    "close": "閉める",
+    "stop": "停止",
+    "send": "送信",
+    "actionOpen": "開く",
+    "actionClose": "閉じる",
+    "actionStop": "停止",
+    "actionPosition": "位置 {position}%",
+    "commandSent": "コマンド送信: {action}"
+  },
+  "token": {
+    "logoutButton": "サインアウト"
+  },
+  "dialog": {
+    "cancel": "いいえ",
+    "confirm": "はい"
+  },
+  "common": {
+    "card": "カード",
+    "notAvailable": "N/A",
+    "unknownRoom": "不明な部屋"
+  },
+  "netatmo": {
+    "loginRequired": "先にサインインしてください。",
+    "invalidToken": "無効なトークン",
+    "unknownError": "不明なエラー"
+  },
+  "errors": {
+    "loadingData": "データの読み込みエラー",
+    "updateError": "データの更新エラー",
+    "commandError": "コマンド送信エラー",
+    "sendCommandError": "コマンド送信エラー",
+    "selectHomeFirst": "先にホームを選択してください。",
+    "selectShutterFirst": "先にスクリーンを選択してください。",
+    "invalidPosition": "有効な位置を入力してください (0-100)。",
+    "unknownAction": "不明なアクション。",
+    "codeVerifierNotFound": "コードベリファイアが見つかりません。",
+    "errorStatus": "エラー {status}: {error}",
+    "oauthError": "OAuthエラー: {error} - {description}",
+    "noDescription": "説明なし",
+    "securityError": "セキュリティエラー: 無効なstate。"
+  }
+}

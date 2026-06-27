@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Succesvol verbonden!"
+  },
+  "auth": {
+    "title": "Instap",
+    "tagline": "Uw thuis, onder een gelukkig gesternte",
+    "description": "Meld u aan om het comfort van uw woning te orkestreren.",
+    "loginButton": "Verbinden met Netatmo",
+    "hint": "Netatmo OAuth · veilige verbinding",
+    "codeVerifierNotFound": "Code-verifier niet gevonden.",
+    "errorStatus": "Fout {status}: {error}",
+    "unknown": "Onbekend",
+    "oauthError": "OAuth-fout: {error} - {description}",
+    "noDescription": "Geen beschrijving",
+    "securityError": "Beveiligingsfout: ongeldige state."
+  },
+  "config": {},
+  "home": {
+    "title": "Stations",
+    "loading": "Woningen laden...",
+    "empty": "Geen woning gevonden.",
+    "fallbackName": "Naamloze woning",
+    "unknownError": "Onbekende fout",
+    "outdoorTemp": "Buitentemperatuur"
+  },
+  "weather": {
+    "title": "Huidig weer",
+    "humidity": "vochtigheid",
+    "gust": "windstoten",
+    "noData": "Geen weerdata beschikbaar",
+    "gpsError": "Locatietoegang geweigerd"
+  },
+  "temperature": {
+    "title": "Thermostaat",
+    "empty": "Geen kamer met thermostaat gevonden.",
+    "fallbackRoom": "Kamer {id}",
+    "setpoint": "Setpoint:",
+    "battery": "Batterij:",
+    "valves": "Ventielen",
+    "chart": {
+      "xAxis": "Datum / Tijd",
+      "yAxis": "Temperatuur (°C)",
+      "resetZoom": "Zoom resetten",
+      "outdoorLabel": "Buiten (Open-Meteo)",
+      "dragDuration": "{n} dag | {n} dagen",
+      "dragDurationHours": "{n} uur | {n} uur",
+      "scales": {
+        "30min": "30 min",
+        "1hour": "1 u",
+        "3hours": "3 u",
+        "1day": "24 u",
+        "1week": "1 wk",
+        "1month": "1 mnd"
+      }
+    },
+    "batteryStates": {
+      "very_low": "zeer laag",
+      "low": "laag",
+      "medium": "gemiddeld",
+      "high": "hoog",
+      "full": "vol"
+    },
+    "loadingError": "Fout bij het laden van gegevens",
+    "updateError": "Fout bij het bijwerken van gegevens"
+  },
+  "light": {
+    "title": "Verlichting",
+    "empty": "Geen NLFN-licht gevonden.",
+    "fallbackName": "Licht {id}",
+    "on": "Aan",
+    "off": "Uit",
+    "selectHomeFirst": "Selecteer eerst een woning.",
+    "controlError": "Fout bij het verzenden van het commando"
+  },
+  "shutter": {
+    "title": "Zonneschermen",
+    "empty": "Geen rolluik gevonden in deze woning.",
+    "fallbackName": "Rolluik {id}",
+    "open": "Openen",
+    "close": "Sluiten",
+    "stop": "Stop",
+    "send": "Verzenden",
+    "actionOpen": "Openen",
+    "actionClose": "Sluiten",
+    "actionStop": "Stop",
+    "actionPosition": "Positie {position}%",
+    "commandSent": "Commando verzonden: {action}"
+  },
+  "token": {
+    "logoutButton": "Afmelden"
+  },
+  "dialog": {
+    "cancel": "Nee",
+    "confirm": "Ja"
+  },
+  "common": {
+    "card": "Kaart",
+    "notAvailable": "N.v.t.",
+    "unknownRoom": "Onbekende kamer"
+  },
+  "netatmo": {
+    "loginRequired": "Meld u eerst aan.",
+    "invalidToken": "Ongeldig token",
+    "unknownError": "Onbekende fout"
+  },
+  "errors": {
+    "loadingData": "Fout bij het laden van gegevens",
+    "updateError": "Fout bij het bijwerken van gegevens",
+    "commandError": "Fout bij het verzenden van het commando",
+    "sendCommandError": "Fout bij het verzenden van het commando",
+    "selectHomeFirst": "Selecteer eerst een woning.",
+    "selectShutterFirst": "Selecteer eerst een rolluik.",
+    "invalidPosition": "Voer een geldige positie in (0-100).",
+    "unknownAction": "Onbekende actie.",
+    "codeVerifierNotFound": "Code-verifier niet gevonden.",
+    "errorStatus": "Fout {status}: {error}",
+    "oauthError": "OAuth-fout: {error} - {description}",
+    "noDescription": "Geen beschrijving",
+    "securityError": "Beveiligingsfout: ongeldige state."
+  }
+}

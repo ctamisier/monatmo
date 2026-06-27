@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Połączono pomyślnie!"
+  },
+  "auth": {
+    "title": "Wejście",
+    "tagline": "Twój dom, pod szczęśliwą gwiazdą",
+    "description": "Zaloguj się, aby zarządzać komfortem swojego domu.",
+    "loginButton": "Połącz z Netatmo",
+    "hint": "Netatmo OAuth · bezpieczne połączenie",
+    "codeVerifierNotFound": "Nie znaleziono code verifier.",
+    "errorStatus": "Błąd {status}: {error}",
+    "unknown": "Nieznany",
+    "oauthError": "Błąd OAuth: {error} - {description}",
+    "noDescription": "Brak opisu",
+    "securityError": "Błąd bezpieczeństwa: nieprawidłowy state."
+  },
+  "config": {},
+  "home": {
+    "title": "Stacje",
+    "loading": "Ładowanie domów...",
+    "empty": "Nie znaleziono żadnego domu.",
+    "fallbackName": "Dom bez nazwy",
+    "unknownError": "Nieznany błąd",
+    "outdoorTemp": "Temperatura zewnętrzna"
+  },
+  "weather": {
+    "title": "Aktualna pogoda",
+    "humidity": "wilgotność",
+    "gust": "porywy",
+    "noData": "Brak danych pogodowych",
+    "gpsError": "Odmowa dostępu do lokalizacji"
+  },
+  "temperature": {
+    "title": "Termostat",
+    "empty": "Nie znaleziono pokoju z termostatem.",
+    "fallbackRoom": "Pokój {id}",
+    "setpoint": "Zadana:",
+    "battery": "Bateria:",
+    "valves": "Zawory",
+    "chart": {
+      "xAxis": "Data / Godzina",
+      "yAxis": "Temperatura (°C)",
+      "resetZoom": "Resetuj zoom",
+      "outdoorLabel": "Na zewnątrz (Open-Meteo)",
+      "dragDuration": "{n} dzień | {n} dni",
+      "dragDurationHours": "{n} godzina | {n} godzin",
+      "scales": {
+        "30min": "30 min",
+        "1hour": "1 godz",
+        "3hours": "3 godz",
+        "1day": "24 godz",
+        "1week": "1 tydz",
+        "1month": "1 mies"
+      }
+    },
+    "batteryStates": {
+      "very_low": "bardzo niski",
+      "low": "niski",
+      "medium": "średni",
+      "high": "wysoki",
+      "full": "pełny"
+    },
+    "loadingError": "Błąd ładowania danych",
+    "updateError": "Błąd aktualizacji danych"
+  },
+  "light": {
+    "title": "Oświetlenie",
+    "empty": "Nie znaleziono światła NLFN.",
+    "fallbackName": "Światło {id}",
+    "on": "Włączone",
+    "off": "Wyłączone",
+    "selectHomeFirst": "Najpierw wybierz dom.",
+    "controlError": "Błąd wysyłania polecenia"
+  },
+  "shutter": {
+    "title": "Osłony przeciwsłoneczne",
+    "empty": "Nie znaleziono rolety w tym domu.",
+    "fallbackName": "Roleta {id}",
+    "open": "Otwórz",
+    "close": "Zamknij",
+    "stop": "Stop",
+    "send": "Wyślij",
+    "actionOpen": "Otwórz",
+    "actionClose": "Zamknij",
+    "actionStop": "Stop",
+    "actionPosition": "Pozycja {position}%",
+    "commandSent": "Polecenie wysłane: {action}"
+  },
+  "token": {
+    "logoutButton": "Wyloguj"
+  },
+  "dialog": {
+    "cancel": "Nie",
+    "confirm": "Tak"
+  },
+  "common": {
+    "card": "Karta",
+    "notAvailable": "N/dost",
+    "unknownRoom": "Nieznany pokój"
+  },
+  "netatmo": {
+    "loginRequired": "Najpierw się zaloguj.",
+    "invalidToken": "Nieprawidłowy token",
+    "unknownError": "Nieznany błąd"
+  },
+  "errors": {
+    "loadingData": "Błąd ładowania danych",
+    "updateError": "Błąd aktualizacji danych",
+    "commandError": "Błąd wysyłania polecenia",
+    "sendCommandError": "Błąd wysyłania polecenia",
+    "selectHomeFirst": "Najpierw wybierz dom.",
+    "selectShutterFirst": "Najpierw wybierz roletę.",
+    "invalidPosition": "Wprowadź prawidłową pozycję (0-100).",
+    "unknownAction": "Nieznana akcja.",
+    "codeVerifierNotFound": "Nie znaleziono code verifier.",
+    "errorStatus": "Błąd {status}: {error}",
+    "oauthError": "Błąd OAuth: {error} - {description}",
+    "noDescription": "Brak opisu",
+    "securityError": "Błąd bezpieczeństwa: nieprawidłowy state."
+  }
+}

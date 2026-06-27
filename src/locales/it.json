@@ -1,0 +1,122 @@
+{
+  "app": {
+    "success": "Connessione riuscita!"
+  },
+  "auth": {
+    "title": "Imbarco",
+    "tagline": "La tua casa, sotto una buona stella",
+    "description": "Accedi per orchestrare il comfort della tua abitazione.",
+    "loginButton": "Accedi con Netatmo",
+    "hint": "Netatmo OAuth · connessione sicura",
+    "codeVerifierNotFound": "Code verifier non trovato.",
+    "errorStatus": "Errore {status}: {error}",
+    "unknown": "Sconosciuto",
+    "oauthError": "Errore OAuth: {error} - {description}",
+    "noDescription": "Nessuna descrizione",
+    "securityError": "Errore di sicurezza: state non valido."
+  },
+  "config": {},
+  "home": {
+    "title": "Stazioni",
+    "loading": "Caricamento abitazioni...",
+    "empty": "Nessuna abitazione trovata.",
+    "fallbackName": "Abitazione senza nome",
+    "unknownError": "Errore sconosciuto",
+    "outdoorTemp": "Temperatura esterna"
+  },
+  "weather": {
+    "title": "Meteo attuale",
+    "humidity": "umidità",
+    "gust": "raffiche",
+    "noData": "Nessun dato meteorologico",
+    "gpsError": "Accesso alla posizione negato"
+  },
+  "temperature": {
+    "title": "Termostato",
+    "empty": "Nessuna stanza con termostato trovata.",
+    "fallbackRoom": "Stanza {id}",
+    "setpoint": "Setpoint:",
+    "battery": "Batteria:",
+    "valves": "Valvole",
+    "chart": {
+      "xAxis": "Data / Ora",
+      "yAxis": "Temperatura (°C)",
+      "resetZoom": "Reimposta zoom",
+      "outdoorLabel": "Esterno (Open-Meteo)",
+      "dragDuration": "{n} giorno | {n} giorni",
+      "dragDurationHours": "{n} ora | {n} ore",
+      "scales": {
+        "30min": "30 min",
+        "1hour": "1 h",
+        "3hours": "3 h",
+        "1day": "24 h",
+        "1week": "1 sett",
+        "1month": "1 mese"
+      }
+    },
+    "batteryStates": {
+      "very_low": "molto bassa",
+      "low": "bassa",
+      "medium": "media",
+      "high": "alta",
+      "full": "piena"
+    },
+    "loadingError": "Errore nel caricamento dei dati",
+    "updateError": "Errore nell'aggiornamento dei dati"
+  },
+  "light": {
+    "title": "Illuminazioni",
+    "empty": "Nessuna luce NLFN trovata.",
+    "fallbackName": "Luce {id}",
+    "on": "Acceso",
+    "off": "Spento",
+    "selectHomeFirst": "Seleziona prima un'abitazione.",
+    "controlError": "Errore nell'invio del comando"
+  },
+  "shutter": {
+    "title": "Scudi solari",
+    "empty": "Nessuna persiana a rullino trovata in questa abitazione.",
+    "fallbackName": "Persiana {id}",
+    "open": "Apri",
+    "close": "Chiudi",
+    "stop": "Stop",
+    "send": "Invia",
+    "actionOpen": "Apertura",
+    "actionClose": "Chiusura",
+    "actionStop": "Arresto",
+    "actionPosition": "Posizione {position}%",
+    "commandSent": "Comando inviato: {action}"
+  },
+  "token": {
+    "logoutButton": "Disconnetti"
+  },
+  "dialog": {
+    "cancel": "No",
+    "confirm": "Sì"
+  },
+  "common": {
+    "card": "Scheda",
+    "notAvailable": "N/D",
+    "unknownRoom": "Stanza sconosciuta"
+  },
+  "netatmo": {
+    "loginRequired": "Effettua prima l'accesso.",
+    "invalidToken": "Token non valido",
+    "unknownError": "Errore sconosciuto"
+  },
+  "errors": {
+    "loadingData": "Errore nel caricamento dei dati",
+    "updateError": "Errore nell'aggiornamento dei dati",
+    "commandError": "Errore nell'invio del comando",
+    "sendCommandError": "Errore nell'invio del comando",
+    "selectHomeFirst": "Seleziona prima un'abitazione.",
+    "selectShutterFirst": "Seleziona prima una persiana.",
+    "invalidPosition": "Inserisci una posizione valida (0-100).",
+    "unknownAction": "Azione sconosciuta.",
+    "codeVerifierNotFound": "Code verifier non trovato.",
+    "errorStatus": "Errore {status}: {error}",
+    "oauthError": "Errore OAuth: {error} - {description}",
+    "noDescription": "Nessuna descrizione",
+    "securityError": "Errore di sicurezza: state non valido."
+  }
+}
