@@ -1,0 +1,4033 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Legrand - Netatmo - BTicino, Home + Control",
+    "termsOfService": "https://dev.netatmo.com/legal/",
+    "contact": {
+      "name": "Contact API Netatmo",
+      "url": "https://dev.netatmo.com/legal/",
+      "email": "contact-api@netatmo.com"
+    },
+    "license": {
+      "name": "Netatmo Legal",
+      "url": "https://dev.netatmo.com/legal/"
+    },
+    "version": "1.3"
+  },
+  "externalDocs": {
+    "description": "Find out more about Netatmo API",
+    "url": "https://dev.netatmo.com"
+  },
+  "servers": [
+    {
+      "url": "https://api.netatmo.com/api",
+      "description": "Netatmo's API endpoint"
+    }
+  ],
+  "paths": {
+    "/homesdata": {
+      "get": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Retrieve user's homes and their topology.",
+        "description": "This endpoint permits to retrieve the actual topology and static information of all devices present into a user account. <br>It is possible to specify a <i>home_id</i> to focus on one home or to specify a <i>gateway_type</i> to focus on one type of gateway.<br><br><br><b> Scope to use:</b> <br> <ul><li>read_magellan for Legrand Wiring device or Electrical panel products </li><li>read_smarther for Smarther with Netatmo thermostat</li> <li> read_thermostat for Smart Modulating thermostat </li><li> read_bubendorff for Bubbendorf shutters</li><li> read_mhs1 for the MyHome Server 1 modules</li></ul>",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Filter by Home ID",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b23"
+            }
+          },
+          {
+            "name": "gateway_types",
+            "in": "query",
+            "description": "Filter by Gateway Type {BNS, NLG, OTH, NBG, BNMH}",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "BNS",
+                  "NLG",
+                  "OTH",
+                  "NBG",
+                  "BNMH"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "homes": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/Home"
+                              }
+                            },
+                            "user": {
+                              "type": "object",
+                              "properties": {
+                                "pending_user_consent": {
+                                  "type": "boolean",
+                                  "description": "Whether the legal consent is accepted. This relates to the country of the user"
+                                },
+                                "country": {
+                                  "$ref": "#/components/schemas/Country"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "read_magellan",
+              "read_smarther",
+              "read_thermostat",
+              "read_bubendorff",
+              "read_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/homestatus": {
+      "get": {
+        "deprecated": false,
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Get the current status of a home and the associated devices",
+        "description": "This endpoint permits to retrieve the actual status of all devices present into a specific home.<br>It is possible to specify a list of gateways using <i>device_types</i> to filter the returned devices.<br><br><b> Scope to use:</b> <br> <ul><li>read_magellan for Legrand Wiring device or Electrical panel products </li><li>read_smarther for Smarther with Netatmo thermostat</li> <li> read_thermostat for Smart Modulating thermostat </li><li> read_bubendorff for Bubbendorf shutters</li><li> read_mhs1 for the MyHome Server 1 modules</li></ul>",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954xxxxxxx7b23"
+            }
+          },
+          {
+            "name": "device_types",
+            "in": "query",
+            "description": "Filter by Gateway Types {BNS, NLG, OTH, NBG, BNMH}",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "NLG",
+                "enum": [
+                  "BNS",
+                  "NLG",
+                  "OTH",
+                  "NBG",
+                  "BNMH"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "home": {
+                              "$ref": "#/components/schemas/HomeStatus"
+                            },
+                            "errors": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SyncError"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "read_magellan",
+              "read_smarther",
+              "read_thermostat",
+              "read_bubendorff",
+              "read_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/setstate": {
+      "post": {
+        "deprecated": false,
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Modify device status",
+        "description": "This endpoint permits to modify the actual status of devices present into a specific home.<br> Parameters are sent through the request body using a json format. The json contains the same format as the body of the answer of a <a href='https://dev.netatmo.com/apidocumentation/control#homestatus'> homestatus method</a> (see the different editable examples).<br>For heating modules, the state can be controlled at the room level.<br>For other modules, the state is controlled at the module level.<br><br><b> Scope to use:</b> <br> <ul><li>write_magellan for Legrand Wiring device or Electrical panel products </li><li>write_smarther for Smarther with Netatmo thermostat</li> <li> write_thermostat for Smart Modulating thermostat </li><li> write_bubendorff for Bubbendorf shutters</li></ul>",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "home": {
+                    "$ref": "#/components/schemas/HomeStatus"
+                  }
+                }
+              },
+              "examples": {
+                "Launch scenario": {
+                  "summary": "Launch a scenario (NLG)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx",
+                          "scenario": "home"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Turn on the module": {
+                  "summary": "Turn on the module (NLP, NLPM, NLC, BNCS)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "on": true,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Change brightness of the light": {
+                  "summary": "Change brightness of the light (NLF)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "brightness": 50,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Turn on the light": {
+                  "summary": "Turn on the light (NLF, NLM, NLL, NLPT, BNIL)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "on": true,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Open roller shutter": {
+                  "summary": "Open the roller shutter (NLV, BNAS)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "target_position": 100,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Set a setpoint of the room to Eco mode (Controlled by NLC)": {
+                  "summary": "Set a setpoint of the room to Eco mode (Controlled by NLC)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_mode": "manual",
+                          "therm_setpoint_fp": "away",
+                          "therm_setpoint_end_time": 1505368800
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Set the room to frost guard mode (Controlled by NLC)": {
+                  "summary": "Set the room to frost guard mode (Controlled by NLC)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_mode": "hg"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Set the room to comfort mode (Controlled by NLC)": {
+                  "summary": "Set the room to comfort mode (Controlled by NLC)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_mode": "manual",
+                          "therm_setpoint_fp": "comfort",
+                          "therm_setpoint_end_time": 1505368800
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Apply a temperature setpoint to a room (for Smarther set to heating)": {
+                  "summary": "Apply a temperature setpoint to a room (BNS, BNTH)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_end_time": 1616621480,
+                          "therm_setpoint_mode": "manual",
+                          "therm_setpoint_temperature": 20
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Set a room to BOOST (for Smarther in heating)": {
+                  "summary": "Set a room to BOOST (for Smarther in heating). It can only be applied for 30, 60 or 90 minutes",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_end_time": 1616621480,
+                          "therm_setpoint_mode": "max"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Change a room mode to frostguard (BNS, BNTH)": {
+                  "summary": "Change a room mode to frostguard (for Smarther in heating)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_mode": "hg"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Let a room follow the home schedule (BNS, BNTH)": {
+                  "summary": "Let a room follow the home schedule (for Smarther in heating)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "therm_setpoint_mode": "home"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Apply a temperature setpoint to a room (BNS, BNTH)": {
+                  "summary": "Apply a temperature setpoint to a room (Controlled by Smarther set to Heating). The setpoint end time is optional",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "cooling_setpoint_end_time": 1616621480,
+                          "cooling_setpoint_mode": "manual",
+                          "cooling_setpoint_temperature": 20
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Set a room to BOOST (Controlled by Smarther in Cooling mode)": {
+                  "summary": "Set a room to BOOST (Controlled by Smarther in Heating mode). It can only be applied for 30, 60 or 90 minutes",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "cooling_setpoint_end_time": 1616621480,
+                          "cooling_setpoint_mode": "max"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Change a room mode to off (for Smarther in cooling)": {
+                  "summary": "Change a room mode to frostguard (for Smarther in cooling)",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "cooling_setpoint_mode": "off"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Let a room follow the home schedule (for Smarther in cooling)": {
+                  "summary": "Let a room follow the home schedule (for Smarther in cooling)",
+                  "value": {
+                    "home": {
+                      "id": "555c91a7fe775984658b45ca",
+                      "rooms": [
+                        {
+                          "id": "100000",
+                          "cooling_setpoint_mode": "home"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "Modify states of many modules": {
+                  "summary": "Modify states of many modules at once",
+                  "value": {
+                    "home": {
+                      "id": "55xxxxxxxxxxxxxxxa",
+                      "modules": [
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "target_position": 100,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        },
+                        {
+                          "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                          "on": false,
+                          "bridge": "00:xx:xx:xx:xx:xx"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "errors": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SyncError"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "write_magellan",
+              "write_smarther",
+              "write_thermostat",
+              "write_bubendorff",
+              "write_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/getscenarios": {
+      "get": {
+        "deprecated": false,
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Retrieve scenarios of devices associated to the home",
+        "description": "This endpoint permits to retrieve the list of scenarios associated to a home. 2 types of information are retrieved:<ul><li>The list of scenarios</li><li>The list of modules and their behavior associated to each scenario</li></ul> <br><br><b> Scope to use:</b> <br> <ul><li>read_magellan for Legrand Wiring device or Electrical panel products</li><li> read_bubendorff for Bubbendorf shutters</li><li> read_mhs1 for the MyHome Server 1 modules</li></ul> ",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b23"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "home": {
+                              "$ref": "#/components/schemas/HomeScenario"
+                            },
+                            "errors": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SyncError"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "read_magellan",
+              "read_bubendorff",
+              "read_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/getroommeasure": {
+      "get": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Retrieve data history of a room (eg to display graphs)",
+        "description": "This endpoint permits to retrieve the history of data associated to a room.<br><br><b> Scope to use:</b> <br> <ul><li>read_smarther for Smarther with Netatmo thermostat</li> <li> read_thermostat for Smart Modulating thermostat </li></ul>",
+        "operationId": "getroommeasure",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b23"
+            }
+          },
+          {
+            "name": "room_id",
+            "in": "query",
+            "description": "Room ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": 2016185224
+            }
+          },
+          {
+            "name": "scale",
+            "in": "query",
+            "description": "Timestamp of the last measure to retrieve (Local Unix Time in seconds)",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "30min",
+              "enum": [
+                "30min",
+                "1hour",
+                "3hours",
+                "1day",
+                "1week",
+                "1month"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of data to be returned {temperature, sp_temperature, min_temp, max_temp, date_min_temp, date_max_temp}. <br>Date data are only available for scales from 1 day to 1 month and unit is Local Unix Time in seconds.",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "temperature",
+                "enum": [
+                  "temperature",
+                  "sp_temperature",
+                  "min_temp",
+                  "max_temp",
+                  "date_min_temp",
+                  "date_max_temp"
+                ]
+              }
+            }
+          },
+          {
+            "name": "date_begin",
+            "in": "query",
+            "description": "Timestamp of the first measure to retrieve (Local Unix Time in seconds).<br> By default, it will retrieve the oldest data available.",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "number",
+              "example": 1459265427
+            }
+          },
+          {
+            "name": "date_end",
+            "in": "query",
+            "description": "Timestamp of the last measure to retrieve (Local Unix Time in seconds)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "number",
+              "example": 1459265427
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of measurements (default and max are 1024)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "number",
+              "example": 1024
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "home": {
+                              "$ref": "#/components/schemas/Roommeasure"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "read_smarther",
+              "read_thermostat"
+            ]
+          }
+        ]
+      }
+    },
+    "/setthermmode": {
+      "post": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Control the home heating system",
+        "description": "This endpoint permits to control the heating of a specific home. A home can be set in 3 differents modes:<ul><li> \"schedule\" mode in which the home will follow the user schedule</li><li> \"away\" mode which will put the whole house to away (default is 12° but can be changed by the user in its settings)</li><li>\"hg\" corresponds to frostguard mode (7° by default)</li></ul><br><br><b> Scope to use:</b> <br> <ul><li>write_smarther for Smarther with Netatmo thermostat</li> <li> write_thermostat for Smart Modulating thermostat </li></ul>",
+        "operationId": "setthermmode",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b23"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Set the home heating system to use {schedule, away, hg}",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": null,
+              "enum": [
+                "schedule",
+                "away",
+                "hg"
+              ]
+            }
+          },
+          {
+            "name": "endtime",
+            "in": "query",
+            "description": "Enddate of the therm mode (Local Unix Time in seconds). It's only settable  for \"hg\" and \"away\" mode",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": 1554715909
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "write_smarther",
+              "write_thermostat"
+            ]
+          }
+        ]
+      }
+    },
+    "/getmeasure": {
+      "get": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Retrieve global historical data",
+        "description": "This endpoint permits to get historical measure for devices. <br><br><b> Scope to use:</b> <br> <ul><li>read_magellan for Legrand Wiring device or Electrical panel products (consumption data) </li><li>read_smarther for Smarther with Netatmo thermostat (boiler/cooler status)</li> <li> read_thermostat for Smart Modulating thermostat (boiler status) </li></ul>",
+        "operationId": "getmeasure",
+        "parameters": [
+          {
+            "name": "device_id",
+            "in": "query",
+            "description": "Gateway Mac Address",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "xx:xx:xx:xx:xx:xx"
+            }
+          },
+          {
+            "name": "module_id",
+            "in": "query",
+            "description": "Module Mac Adress",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "xx:xx:xx:xx:xx:xx"
+            }
+          },
+          {
+            "name": "scale",
+            "in": "query",
+            "description": "Timeframe between two measurements {30min, 1hour, 3hours, 1day, 1week, 1month}",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "30min",
+              "enum": [
+                "30min",
+                "1hour",
+                "3hours",
+                "1day",
+                "1week",
+                "1month",
+                "max"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of data to be returned {boileron, boileroff, sum_boiler_on, sum_boiler_off, sum_energy_elec, sum_energy_elec$0, sum_energy_elec$1, sum_energy_elec$2, sum_energy_price}<br>Boileron/off is only available for scales from 30 to 3hours and sums of boiler on/off for scales from 1day to 1month.<br><ul><li>boileron = Average number of minutes the boiler is active per hour</li><li>boileroff = Average number of minutes the boiler is inactive per hour</li><li>sum_boiler_on = Sum of minutes the boiler is active during the <i>scale</i> time period</li><li>sum_boiler_off = Sum of minutes the boiler is inactive during the <i>scale</i> time period</li><li>sum_energy_elec = Cumulated energy consumption during the <i>scale</i> time period in case there is no electricity contract</li><li>sum_energy_elec$0/1/2 = Cumulated energy consumption during the <i>scale</i> time period in case there is an electricity contract:<ul><li>$0 in case of a basic tariff (always the same tariff )</li><li>$1 for peak time periods </li><li>$2 for off peak time periods</li></ul></li><li>sum_energy_price = Cumulated energy price during the <i>scale</i> time periods in case there is no electricity contract</li> <li>sum_energy_price$0/1/2 = Cumulated energy price during the <i>scale</i> time periods in case there is an electricity contract:</li><ul><li>$0 in case of a basic tariff (always the same tariff )</li><li>$1 for peak time periods </li><li>$2 for off peak time periods </li></ul></li></ul>",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "boileron",
+                  "boileroff",
+                  "cooleron",
+                  "cooleroff",
+                  "sum_energy_elec",
+                  "sum_energy_elec$0",
+                  "sum_energy_elec$1",
+                  "sum_energy_elec$2",
+                  "sum_energy_price"
+                ]
+              }
+            }
+          },
+          {
+            "name": "date_begin",
+            "in": "query",
+            "description": "Timestamp of the first measure to retrieve (Local Unix Time in seconds).<br> By default, it will retrieve the oldest data available.",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "number",
+              "example": 1459265427
+            }
+          },
+          {
+            "name": "date_end",
+            "in": "query",
+            "description": "Timestamp of the last measure to retrieve (Local Unix Time in seconds)",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "number",
+              "example": 2459265427
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "body": {
+                          "type": "object",
+                          "properties": {
+                            "home": {
+                              "$ref": "#/components/schemas/Getmeasure"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "read_magellan",
+              "read_smarther"
+            ]
+          }
+        ]
+      }
+    },
+    "/createnewhomeschedule": {
+      "post": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Creates a weekly schedule.",
+        "description": "This endpoint permits to create a new schedule of a home. <br>Several types of schedules can be created<ul><li> Heating schedule </li><li> Cooling schedule </li><li> Event schedule </li><li> Electricity schedule </li></ul>The parameters specific to a type of planning and the planning definition composed of a timetable array and a zone array are sent via the body.<br><br><b>Scope to use:</b> <br> write_smarther, write_magellan",
+        "operationId": "createnewhomeschedule",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "59xxxxxxxxxxxxxxxxx"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Home ID",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "My planning"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/NewHeatingSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NewCoolingSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NewEventSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NewElectricitySchedule"
+                  }
+                ]
+              },
+              "examples": {
+                "Create a heating schedule": {
+                  "summary": "Create a heating schedule",
+                  "value": {
+                    "away_temp": 15,
+                    "hg_temp": 7,
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Confort",
+                        "type": 0,
+                        "id": 0,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 21
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "comfort"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Comfort +",
+                        "type": 8,
+                        "id": 3,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 22
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "comfort"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Eco",
+                        "type": 5,
+                        "id": 4,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 19
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "away"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "type": 1,
+                        "id": 1,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 17
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "away"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "Create a Cooling schedule": {
+                  "summary": "Create a cooling schedule",
+                  "value": {
+                    "cooling_away_temp": 15,
+                    "schedule_type": "cooling",
+                    "selected": true,
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Confort",
+                        "type": 0,
+                        "id": 0,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Comfort +",
+                        "type": 8,
+                        "id": 3,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 22
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_temperature": 22
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Eco",
+                        "type": 5,
+                        "id": 4,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "type": 1,
+                        "id": 1,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "Create an event schedule": {
+                  "summary": "Create an event schedule",
+                  "value": {
+                    "schedule_type": "event",
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Morning",
+                        "id": 0,
+                        "rooms": [
+                          null
+                        ],
+                        "modules": [
+                          {
+                            "bridge": "00:04:74:xx:xx:xx",
+                            "id": "00:04:74:xx:xx:xx:xx:xx",
+                            "target_position": 100
+                          },
+                          {
+                            "bridge": "00:05:23:xx:xx:xx",
+                            "id": "00:15:f7:xx:xx:xx:xx:xx",
+                            "on": true
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "id": 1,
+                        "rooms": [
+                          null
+                        ],
+                        "modules": [
+                          {
+                            "bridge": "00:04:74:xx:xx:xx",
+                            "id": "00:04:74:xx:xx:xx:xx:xx",
+                            "target_position": 0
+                          },
+                          {
+                            "bridge": "00:05:23:xx:xx:xx",
+                            "id": "00:15:f7:xx:xx:xx:xx:xx",
+                            "on": false
+                          }
+                        ]
+                      }
+                    ],
+                    "timetable_sunrise": [
+                      {
+                        "zone_id": 0,
+                        "day": 1,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 2,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 3,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 4,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 5,
+                        "twilight_offset": -15
+                      }
+                    ],
+                    "timetable_sunset": [
+                      {
+                        "zone_id": 1,
+                        "day": 1,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 2,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 3,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 4,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 5,
+                        "twilight_offset": 120
+                      }
+                    ]
+                  }
+                },
+                "Create an electricity schedule": {
+                  "summary": "Create an electricity schedule",
+                  "value": {
+                    "schedule_type": "electricity",
+                    "power_threshold": 3,
+                    "contract_power_unit": "kVA",
+                    "tariff": "custom",
+                    "tariff_option": "peak_and_off_peak",
+                    "zones": [
+                      {
+                        "id": 0,
+                        "price": 0.21,
+                        "price_type": "peak"
+                      },
+                      {
+                        "id": 0,
+                        "price": 0.11,
+                        "price_type": "off_peak"
+                      }
+                    ],
+                    "timetable": [
+                      {
+                        "zone_id": 0,
+                        "m_offset": 0
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 600
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 1440
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 2040
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 2880
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 3480
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 4320
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 4920
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 5760
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 6360
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 7200
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 7800
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 8640
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 9240
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "write_smarther",
+              "write_magellan",
+              "write_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/synchomeschedule": {
+      "post": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Modify a thermostat weekly schedule.",
+        "description": "This endpoint permits to edit an existing schedule. <br> It is possible to only rename the schedule or to edit the timetable and/or the zones.<br>If no schedule_id is specified, then the current active schedule is modified. Schedules parameters are similar to /createnewhomeschedule endpoint.<br><br><b> Scope to use:</b> <br> write_smarther, write_magellan",
+        "operationId": "synchomeschedule",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "59xxxxxxxxxxxxxxxxx"
+            }
+          },
+          {
+            "name": "schedule_id",
+            "in": "query",
+            "description": "Id of the schedule. If not defined, the current schedule is modified",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5axxxxxxxxxxxxxxxxx"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of the schedule",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "Holidays"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SyncHeatingSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SyncCoolingSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SyncEventSchedule"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SyncElectricitySchedule"
+                  }
+                ]
+              },
+              "examples": {
+                "Update the name of a heating schedule": {
+                  "summary": "Update the name of a schedule",
+                  "value": {
+                    "away_temp": 15,
+                    "hg_temp": 7
+                  }
+                },
+                "Update a heating schedule": {
+                  "summary": "Update a heating schedule",
+                  "value": {
+                    "away_temp": 15,
+                    "hg_temp": 7,
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Confort",
+                        "type": 0,
+                        "id": 0,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 21
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "comfort"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Comfort +",
+                        "type": 8,
+                        "id": 3,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 22
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "comfort"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Eco",
+                        "type": 5,
+                        "id": 4,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 19
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "away"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "type": 1,
+                        "id": 1,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "therm_setpoint_temperature": 17
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "therm_setpoint_fp": "away"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "Update a Cooling schedule": {
+                  "summary": "Update a cooling schedule",
+                  "value": {
+                    "cooling_away_temp": 15,
+                    "schedule_type": "cooling",
+                    "selected": true,
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Confort",
+                        "type": 0,
+                        "id": 0,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Comfort +",
+                        "type": 8,
+                        "id": 3,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 22
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_temperature": 22
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Eco",
+                        "type": 5,
+                        "id": 4,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "type": 1,
+                        "id": 1,
+                        "rooms": [
+                          {
+                            "id": "1383xxxxxx",
+                            "cooling_setpoint_temperature": 23
+                          },
+                          {
+                            "id": "2453xxxxxx",
+                            "cooling_setpoint_mode": "off"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "Update an event schedule": {
+                  "summary": "Update an event schedule",
+                  "value": {
+                    "schedule_type": "event",
+                    "timetable": [
+                      {
+                        "m_offset": 0,
+                        "zone_id": 1
+                      },
+                      {
+                        "m_offset": 640,
+                        "zone_id": 0
+                      }
+                    ],
+                    "zones": [
+                      {
+                        "name": "Morning",
+                        "id": 0,
+                        "rooms": [
+                          null
+                        ],
+                        "modules": [
+                          {
+                            "bridge": "00:04:74:xx:xx:xx",
+                            "id": "00:04:74:xx:xx:xx:xx:xx",
+                            "target_position": 100
+                          },
+                          {
+                            "bridge": "00:05:23:xx:xx:xx",
+                            "id": "00:15:f7:xx:xx:xx:xx:xx",
+                            "on": true
+                          }
+                        ]
+                      },
+                      {
+                        "name": "Night",
+                        "id": 1,
+                        "rooms": [
+                          null
+                        ],
+                        "modules": [
+                          {
+                            "bridge": "00:04:74:xx:xx:xx",
+                            "id": "00:04:74:xx:xx:xx:xx:xx",
+                            "target_position": 0
+                          },
+                          {
+                            "bridge": "00:05:23:xx:xx:xx",
+                            "id": "00:15:f7:xx:xx:xx:xx:xx",
+                            "on": false
+                          }
+                        ]
+                      }
+                    ],
+                    "timetable_sunrise": [
+                      {
+                        "zone_id": 0,
+                        "day": 1,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 2,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 3,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 4,
+                        "twilight_offset": -15
+                      },
+                      {
+                        "zone_id": 0,
+                        "day": 5,
+                        "twilight_offset": -15
+                      }
+                    ],
+                    "timetable_sunset": [
+                      {
+                        "zone_id": 1,
+                        "day": 1,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 2,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 3,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 4,
+                        "twilight_offset": 120
+                      },
+                      {
+                        "zone_id": 1,
+                        "day": 5,
+                        "twilight_offset": 120
+                      }
+                    ]
+                  }
+                },
+                "Update an electricity schedule": {
+                  "summary": "Create an electricity schedule",
+                  "value": {
+                    "schedule_type": "electricity",
+                    "power_threshold": 3,
+                    "contract_power_unit": "kVA",
+                    "tariff": "custom",
+                    "tariff_option": "peak_and_off_peak",
+                    "zones": [
+                      {
+                        "id": 0,
+                        "price": 0.21,
+                        "price_type": "peak"
+                      },
+                      {
+                        "id": 0,
+                        "price": 0.11,
+                        "price_type": "off_peak"
+                      }
+                    ],
+                    "timetable": [
+                      {
+                        "zone_id": 0,
+                        "m_offset": 0
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 600
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 1440
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 2040
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 2880
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 3480
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 4320
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 4920
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 5760
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 6360
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 7200
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 7800
+                      },
+                      {
+                        "zone_id": 0,
+                        "m_offset": 8640
+                      },
+                      {
+                        "zone_id": 1,
+                        "m_offset": 9240
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "write_smarther",
+              "write_magellan",
+              "write_mhs1"
+            ]
+          }
+        ]
+      }
+    },
+    "/switchhomeschedule": {
+      "post": {
+        "tags": [
+          "Legrand"
+        ],
+        "summary": "Apply a specific schedule",
+        "description": "This endpoint permits to apply a specific schedule to a home<br><br><b> Scope to use:</b> <br> write_smarther, write_magellan",
+        "operationId": "switchhomeschedule",
+        "parameters": [
+          {
+            "name": "home_id",
+            "in": "query",
+            "description": "Home ID",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b24"
+            }
+          },
+          {
+            "name": "schedule_id",
+            "in": "query",
+            "description": "Id of the schedule to switch on",
+            "required": true,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "example": "5954e7f249c75f97428b7b23"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ServerResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServerResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "BasicAuth": []
+          },
+          {
+            "OAuth2": [
+              "write_smarther",
+              "write_magellan",
+              "write_mhs1"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Home": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "555c91a7fe775984658b45ca"
+          },
+          "name": {
+            "type": "string",
+            "example": "My Sweet Home"
+          },
+          "rooms": {
+            "type": "array",
+            "description": "rooms of the home",
+            "items": {
+              "$ref": "#/components/schemas/Room"
+            },
+            "example": [
+              {
+                "id": "581118982",
+                "name": "My bathroom",
+                "type": "bathroom"
+              },
+              {
+                "id": "741111111",
+                "name": "Underground room",
+                "type": "electrical_cabinet"
+              },
+              {
+                "id": "101111110",
+                "name": "My bedroom",
+                "type": "bedroom",
+                "therm_relay": "00:xx:xx:xx:xx:xx"
+              }
+            ]
+          },
+          "modules": {
+            "type": "array",
+            "description": "modules belong to the home",
+            "items": {
+              "$ref": "#/components/schemas/Module"
+            },
+            "example": [
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLP",
+                "name": "My washing machine",
+                "setup_date": 1598367404,
+                "room_id": "581118982",
+                "bridge": "00:xx:xx:xx:xx:xx",
+                "appliance_type": "washing_machine"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLF",
+                "name": "Bathroom light",
+                "setup_date": 1598367404,
+                "room_id": "581118982",
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLT",
+                "name": "Remote Wake up Sleep",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLM",
+                "name": "Mirror in bathroom",
+                "room_id": "581118982",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLV",
+                "name": "Roller shutter in bathroom",
+                "room_id": "581118982",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLL",
+                "name": "My NLL",
+                "room_id": "581118982",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPC",
+                "name": "House energy meter",
+                "room_id": "741118980",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPM",
+                "name": "Light",
+                "room_id": "581118982",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx",
+                "appliance_type": "light"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLC",
+                "name": "Bedroom radiator",
+                "room_id": "101218000",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx",
+                "appliance_type": "radiator"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPO",
+                "name": "Contactor",
+                "room_id": "101218900",
+                "setup_date": 1596447898,
+                "bridge": "00:xx:xx:xx:xx:xx",
+                "appliance_type": "other"
+              }
+            ]
+          },
+          "schedules": {
+            "type": "array",
+            "description": "modules belong to the home",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/HomeHeatingSchedule"
+                },
+                {
+                  "$ref": "#/components/schemas/HomeEventSchedule"
+                },
+                {
+                  "$ref": "#/components/schemas/HomeElectricitySchedule"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Room": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "room id"
+          },
+          "name": {
+            "type": "string",
+            "description": "room name"
+          },
+          "therm_relay": {
+            "type": "string",
+            "description": "the main device id of the heating module that controls this room\n\nFor example, in Home + Control product, the cable outlet with \"radiator\" appliance type is considered as a heating module\nwhich can control the temperature or heating mode of the room. This module is necessary to be assigned to a room\nthen, the therm_relay of the room will be the main device id of that radiator\n"
+          },
+          "type": {
+            "type": "string",
+            "description": "room type",
+            "enum": [
+              "kitchen",
+              "bedroom",
+              "livingroom",
+              "bathroom",
+              "lobby",
+              "outdoor",
+              "toilets",
+              "garage",
+              "home_office",
+              "dining_room",
+              "corridor",
+              "stairs",
+              "electrical_cabinet",
+              "custom"
+            ]
+          }
+        }
+      },
+      "Module": {
+        "type": "object",
+        "description": "Module represents a IoT product of Netatmo ecosystem. Module can classify into two category:\n- \"main device\" is a device that can function properly with or without other modules\n- \"module\" is a device that can function only if it associates with the \"main device\"\n",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "module id"
+          },
+          "name": {
+            "type": "string",
+            "description": "module name"
+          },
+          "type": {
+            "type": "string",
+            "description": "module type\nFor Home + Control products:\n  * `NLG` - Gateway\n  * `NLP` - Socket\n  * `NLF` - Switch\n  * `NLT` - Remote\n  * `NLM` - Micromodule\n  * `NLV` - Roller shutter\n  * `NLL` - Italian switch\n  * `NLPC` - Energy meter\n  * `NLPM` - Mobile socket\n  * `NLPO` - Connected contactor\n  * `NLC` - Cable outlet\n  * `BNS` - Smarther with Netatmo\n  * `BNMH` - MyHome Server 1\n  * `BNTH` - Bticino Thermostat\n  * `BNFC` - Bticino Fan coil\n  * `BNTR` - Bticino module towel rail\n  * `BNCS` - Bticino module Controlled Socket\n  * `BNXM` - Bticino X meter\n  * `BNLD` - Bticino module lighting dimmer\n  * `BNIL` - Bticino intelligent light\n  * `BN3L` - Bticino 3rd party light\n  * `BNAB` - Bticino module automatic blind\n  * `BNAS` - Bticino module automatic shutter\n  * `BNMS` - Bticino module motorized shade\n",
+            "enum": [
+              "NLG",
+              "NLP",
+              "NLF",
+              "NLT",
+              "NLM",
+              "NLV",
+              "NLL",
+              "NLPC",
+              "NLPM",
+              "NLPO",
+              "NLC",
+              "BNS",
+              "BNMH",
+              "BNTH",
+              "BNFC",
+              "BNTR",
+              "BNCS",
+              "BNXM",
+              "BNXM",
+              "BNLD",
+              "BNIL",
+              "BN3L",
+              "BNAB",
+              "BNAS",
+              "BNMS"
+            ]
+          },
+          "setup_date": {
+            "type": "integer",
+            "description": "the last installation date in unix timestamp",
+            "example": 1595519375
+          },
+          "appliance_type": {
+            "type": "string",
+            "description": "appliance type of the module. This is only for Home + Control products",
+            "enum": [
+              "light",
+              "fridge_freezer",
+              "oven",
+              "washing_machine",
+              "tumble_dryer",
+              "dishwasher",
+              "multimedia",
+              "router",
+              "other",
+              "cooking",
+              "radiator",
+              "radiator_without_pilot_wire",
+              "water_heater",
+              "extractor_hood",
+              "contactor",
+              "dryer",
+              "electric_charger"
+            ]
+          },
+          "room_id": {
+            "type": "string",
+            "description": "the room id where this module is installed"
+          },
+          "bridge": {
+            "type": "string",
+            "description": "the main device id to which this module associates\nif this module itself is a main device such as Legrand Gateway, this field will be absent\n"
+          }
+        }
+      },
+      "HomeHeatingSchedule": {
+        "type": "object",
+        "properties": {
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/HeatingZone"
+            }
+          },
+          "name": {
+            "type": "string",
+            "example": "mySchedule",
+            "description": "name of the schedule"
+          },
+          "default": {
+            "type": "boolean",
+            "example": false,
+            "description": "Default schedule boolean"
+          },
+          "away_temp": {
+            "type": "integer",
+            "example": 12,
+            "description": "Away temperature"
+          },
+          "hg_temp": {
+            "type": "integer",
+            "example": 7,
+            "description": "Frost guard temperature"
+          },
+          "type": {
+            "type": "string",
+            "example": "therm",
+            "description": "Type of the schedule"
+          }
+        }
+      },
+      "NewHeatingSchedule": {
+        "type": "object",
+        "required": [
+          "away_temp",
+          "hg_temp",
+          "timetable",
+          "zones"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "therm",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "away_temp": {
+            "type": "integer",
+            "example": 12,
+            "description": "Away temperature"
+          },
+          "hg_temp": {
+            "type": "integer",
+            "example": 7,
+            "description": "Frost guard temperature"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/HeatingZone"
+            }
+          }
+        }
+      },
+      "SyncHeatingSchedule": {
+        "type": "object",
+        "required": [
+          "away_temp",
+          "hg_temp"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "therm",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "away_temp": {
+            "type": "integer",
+            "example": 12,
+            "description": "Away temperature"
+          },
+          "hg_temp": {
+            "type": "integer",
+            "example": 7,
+            "description": "Frost guard temperature"
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/HeatingZone"
+            }
+          }
+        }
+      },
+      "NewCoolingSchedule": {
+        "type": "object",
+        "required": [
+          "cooling_away_temp",
+          "hg_temp",
+          "timetable",
+          "zones",
+          "schedule_type"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "cooling",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "cooling_away_temp": {
+            "type": "integer",
+            "example": 12,
+            "description": "Away temperature"
+          },
+          "hg_temp": {
+            "type": "integer",
+            "example": 7,
+            "description": "Frost guard temperature"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/CoolingZone"
+            }
+          }
+        }
+      },
+      "SyncCoolingSchedule": {
+        "type": "object",
+        "required": [
+          "cooling_away_temp",
+          "hg_temp",
+          "timetable"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "cooling",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "cooling_away_temp": {
+            "type": "integer",
+            "example": 12,
+            "description": "Away temperature"
+          },
+          "hg_temp": {
+            "type": "integer",
+            "example": 7,
+            "description": "Frost guard temperature"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/CoolingZone"
+            }
+          }
+        }
+      },
+      "NewEventSchedule": {
+        "type": "object",
+        "required": [
+          "timetable",
+          "zones",
+          "schedule_type"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "cooling",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/EventZone"
+            }
+          }
+        }
+      },
+      "SyncEventSchedule": {
+        "type": "object",
+        "required": [
+          "schedule_type"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "cooling",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/EventZone"
+            }
+          }
+        }
+      },
+      "NewElectricitySchedule": {
+        "type": "object",
+        "required": [
+          "schedule_type",
+          "power_threshold",
+          "contract_power_unit",
+          "tariff",
+          "tariff_option",
+          "timetable",
+          "zones"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "electricity",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/ElectricityZone"
+            }
+          }
+        }
+      },
+      "SyncElectricitySchedule": {
+        "type": "object",
+        "required": [
+          "schedule_type",
+          "power_threshold",
+          "contract_power_unit",
+          "tariff",
+          "tariff_option"
+        ],
+        "properties": {
+          "schedule_type": {
+            "type": "string",
+            "example": "electricity",
+            "description": "Type of the schedule",
+            "default": "therm",
+            "enum": [
+              "therm",
+              "cooling",
+              "event",
+              "electricity"
+            ]
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "activates the schedule",
+            "default": false
+          },
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/ElectricityZone"
+            }
+          }
+        }
+      },
+      "HeatingZone": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Confort",
+            "description": "name of the zone"
+          },
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "type": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              8
+            ],
+            "example": 1,
+            "description": "type of the zone (0 = day, 1 = night, 2 = away, 3 = frost guard, 4 = custom, 5 = eco, 8 = comfort)"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/HeatingRoomTemperature"
+                },
+                {
+                  "$ref": "#/components/schemas/HeatingRoomFP"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "CoolingZone": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Confort",
+            "description": "name of the zone"
+          },
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "type": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              8
+            ],
+            "example": 1,
+            "description": "type of the zone (0 = day, 1 = night, 2 = away, 3 = frost guard, 4 = custom, 5 = eco, 8 = comfort)"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/CoolingRoomTemperature"
+                },
+                {
+                  "$ref": "#/components/schemas/CoolingRoomMode"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "HeatingRoomTemperature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 201618522,
+            "description": "id of the room"
+          },
+          "therm_setpoint_temperature": {
+            "type": "number",
+            "example": 15,
+            "description": "Heating setpoint temperature"
+          }
+        }
+      },
+      "CoolingRoomTemperature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 201618522,
+            "description": "id of the room"
+          },
+          "cooling_setpoint_temperature": {
+            "type": "number",
+            "example": 20,
+            "description": "Cooling setpoint temperature"
+          }
+        }
+      },
+      "CoolingRoomMode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 201618522,
+            "description": "id of the room"
+          },
+          "cooling_setpoint_mode": {
+            "type": "string",
+            "example": "off",
+            "description": "Cooling setpoint mode",
+            "enum": [
+              "off"
+            ]
+          }
+        }
+      },
+      "HeatingRoomFP": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 201618522,
+            "description": "id of the room"
+          },
+          "therm_setpoint_fp": {
+            "type": "string",
+            "example": "away",
+            "description": "Heating setpoint mode for a room controlled by a pilot wire",
+            "enum": [
+              "away",
+              "comfort",
+              "frost_guard",
+              "stand_by"
+            ]
+          }
+        }
+      },
+      "HomeEventSchedule": {
+        "type": "object",
+        "required": [
+          "timetable",
+          "zones",
+          "name",
+          "default",
+          "timetable_sunrise",
+          "timetable_sunset",
+          "id",
+          "type"
+        ],
+        "properties": {
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/EventZone"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the schedule",
+            "example": "Test schedule"
+          },
+          "default": {
+            "type": "boolean",
+            "example": false,
+            "description": "Default schedule boolean"
+          },
+          "timetable_sunrise": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimetableSunriseSunset"
+            }
+          },
+          "timetable_sunset": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimetableSunriseSunset"
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "id of the schedule"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "true if the schedule is selected",
+            "example": true
+          },
+          "type": {
+            "type": "string",
+            "description": "type of schedule (can be either event or electrical for Legrand product)",
+            "example": "event",
+            "enum": [
+              "event"
+            ]
+          }
+        }
+      },
+      "FanEvent": {
+        "type": "object",
+        "properties": {
+          "bridge": {
+            "type": "string",
+            "description": "Gateway id",
+            "example": "00:04:74:14:05:a2"
+          },
+          "id": {
+            "type": "string",
+            "description": "Module id",
+            "example": "00:04:74:00:00:cf:ff:d4"
+          },
+          "fan_speed": {
+            "type": "integer",
+            "description": "Speed of the fan",
+            "example": 2
+          }
+        }
+      },
+      "OnOffEvent": {
+        "type": "object",
+        "properties": {
+          "bridge": {
+            "type": "string",
+            "description": "Gateway id",
+            "example": "00:04:74:14:05:a2"
+          },
+          "id": {
+            "type": "string",
+            "description": "Module id",
+            "example": "00:04:74:00:00:cf:ff:d4"
+          },
+          "on": {
+            "type": "boolean",
+            "description": "Status of the device (on/off)",
+            "example": true
+          }
+        }
+      },
+      "BrightnessEvent": {
+        "type": "object",
+        "properties": {
+          "bridge": {
+            "type": "string",
+            "description": "Gateway id",
+            "example": "00:04:74:14:05:a2"
+          },
+          "id": {
+            "type": "string",
+            "description": "Module id",
+            "example": "00:04:74:00:00:cf:ff:d4"
+          },
+          "brightness": {
+            "type": "integer",
+            "description": "brightness of the light",
+            "example": 70
+          }
+        }
+      },
+      "RollerShutterEvent": {
+        "type": "object",
+        "properties": {
+          "bridge": {
+            "type": "string",
+            "description": "Gateway id",
+            "example": "00:04:74:14:05:a2"
+          },
+          "id": {
+            "type": "string",
+            "description": "Module id",
+            "example": "00:04:74:00:00:cf:ff:d4"
+          },
+          "target_position": {
+            "type": "integer",
+            "description": "Position of the roller shutter. The steps depend on the target_position:step of the device",
+            "example": 100,
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "HomeElectricitySchedule": {
+        "type": "object",
+        "required": [
+          "timetable",
+          "zones",
+          "name",
+          "default",
+          "tariff",
+          "tariff_option",
+          "power_threshold",
+          "contract_power_unit",
+          "id",
+          "type"
+        ],
+        "properties": {
+          "timetable": {
+            "type": "array",
+            "description": "Timetable array of the schedule",
+            "items": {
+              "$ref": "#/components/schemas/Timetable"
+            }
+          },
+          "zones": {
+            "type": "array",
+            "description": "Array of zones",
+            "items": {
+              "$ref": "#/components/schemas/ElectricityZone"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the schedule",
+            "example": "Test schedule"
+          },
+          "default": {
+            "type": "boolean",
+            "example": false,
+            "description": "Default schedule boolean"
+          },
+          "tariff": {
+            "type": "string",
+            "description": "Tariff type",
+            "enum": [
+              "edf_tarif_bleu",
+              "custom"
+            ]
+          },
+          "tariff_option": {
+            "type": "string",
+            "description": "Tariff option (basic = always the same price, peak_and_off_peak = peak & off peak hours)",
+            "enum": [
+              "basic",
+              "peak_and_off_peak"
+            ]
+          },
+          "power_threshold": {
+            "type": "number",
+            "description": "Power subscribed (kVA or kW)",
+            "example": 9
+          },
+          "contract_power_unit": {
+            "type": "string",
+            "example": "kVA",
+            "enum": [
+              "kVA",
+              "kW"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "id of the schedule"
+          },
+          "selected": {
+            "type": "boolean",
+            "description": "true if the schedule is selected",
+            "example": true
+          },
+          "type": {
+            "type": "string",
+            "description": "type of schedule (can be either event or electrical for Legrand product)",
+            "example": "electricity",
+            "enum": [
+              "electricity"
+            ]
+          }
+        }
+      },
+      "HeatingZones": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Confort",
+            "description": "name of the zone"
+          },
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "type": {
+            "type": "number",
+            "example": 1,
+            "description": "type of the zone (0 = day, 1 = night, 2 = away, 3 = frost guard, 4 = custom, 5 = eco, 8 = comfort)"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": 201618522,
+                  "description": "id of the room"
+                },
+                "therm_setpoint_temperature": {
+                  "type": "number",
+                  "example": 15,
+                  "description": "setpoint temperature"
+                }
+              }
+            }
+          }
+        }
+      },
+      "EventZone": {
+        "type": "object",
+        "required": [
+          "id",
+          "rooms",
+          "modules"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Test",
+            "description": "name of the zone"
+          },
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "empty array is returned"
+            }
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FanEvent"
+                },
+                {
+                  "$ref": "#/components/schemas/OnOffEvent"
+                },
+                {
+                  "$ref": "#/components/schemas/RollerShutterEvent"
+                },
+                {
+                  "$ref": "#/components/schemas/BrightnessEvent"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "ElectricityZone": {
+        "type": "object",
+        "required": [
+          "id",
+          "price_type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Test",
+            "description": "name of the zone"
+          },
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "price_type": {
+            "type": "string",
+            "example": "basic",
+            "description": "Type of tariff during that zone",
+            "enum": [
+              "basic",
+              "peak",
+              "off_peak"
+            ]
+          },
+          "price_value": {
+            "type": "number",
+            "description": "Price of electricity during that zone",
+            "example": 0.11
+          }
+        }
+      },
+      "Timetable": {
+        "type": "object",
+        "properties": {
+          "zone_id": {
+            "type": "integer",
+            "example": 1,
+            "description": "id of the zone"
+          },
+          "m_offset": {
+            "type": "integer",
+            "example": 360,
+            "description": "Offset in minutes since Monday 00:00:01"
+          }
+        }
+      },
+      "TimetableSunriseSunset": {
+        "type": "object",
+        "properties": {
+          "zone_id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Id of the zone"
+          },
+          "day": {
+            "type": "integer",
+            "example": 1,
+            "description": "Day concerned (1 = Monday, 2 = Tuesday, ...)",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          "twilight_offset": {
+            "type": "integer",
+            "example": -30,
+            "description": "Offset in minutes from sunrise/sunset when the action is triggered",
+            "minimum": -120,
+            "maximum": 120
+          }
+        }
+      },
+      "Country": {
+        "type": "string",
+        "description": "ISO-3166 2 alphabets",
+        "example": "FR"
+      },
+      "HomeStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "555c91a7fe775984658b45ca"
+          },
+          "rooms": {
+            "type": "array",
+            "description": "statuses of rooms. Room being controlled by heating module will return temperature status such as therm_setpoint_end_time,\ntherm_setpoint_fp and therm_setpoint_mode. In order to know whether the room is controlled by heating module,\n\"therm_relay\" would be returned in a room topology, see /api/homesdata\n",
+            "items": {
+              "$ref": "#/components/schemas/RoomStatus"
+            },
+            "example": [
+              {
+                "id": "514123457",
+                "therm_setpoint_end_time": 2147483647,
+                "therm_setpoint_fp": "away",
+                "therm_setpoint_mode": "home"
+              }
+            ]
+          },
+          "modules": {
+            "type": "array",
+            "description": "statuses of modules",
+            "items": {
+              "$ref": "#/components/schemas/ModuleStatus"
+            },
+            "example": [
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLP",
+                "firmware_revision": 19,
+                "last_seen": 1604940163,
+                "on": false,
+                "power": 0,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "brightness": 100,
+                "firmware_revision": 52,
+                "last_seen": 1604940167,
+                "on": false,
+                "power": 0,
+                "reachable": true,
+                "type": "NLF",
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "battery_state": "full",
+                "configured": false,
+                "firmware_revision": 22,
+                "last_seen": 0,
+                "reachable": false,
+                "subtype": "roller_shutter_remote",
+                "type": "NLT",
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLM",
+                "firmware_revision": 37,
+                "last_seen": 1604940189,
+                "on": true,
+                "power": 50,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "configured": true,
+                "type": "NLV",
+                "current_position": 100,
+                "firmware_revision": 38,
+                "last_seen": 1604940096,
+                "reachable": true,
+                "target_position": 100,
+                "target_position:step": 100,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLL",
+                "firmware_revision": 29,
+                "last_seen": 1604939898,
+                "on": true,
+                "power": 50,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPM",
+                "firmware_revision": 51,
+                "last_seen": 1604939714,
+                "on": false,
+                "power": 0,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPO",
+                "firmware_revision": 51,
+                "last_seen": 1604939714,
+                "on": false,
+                "power": 0,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLPC",
+                "firmware_revision": 51,
+                "last_seen": 1604939714,
+                "power": 0,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "NLC",
+                "firmware_revision": 16,
+                "last_seen": 1604939695,
+                "on": true,
+                "power": 0,
+                "reachable": true,
+                "bridge": "00:xx:xx:xx:xx:xx"
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "type": "BNS",
+                "firmware_revision": 16,
+                "last_seen": 1604939695,
+                "boiler_status": false,
+                "cooler_status": false,
+                "wifi_strength": 36
+              }
+            ]
+          }
+        }
+      },
+      "RoomStatus": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "room id"
+          },
+          "name": {
+            "type": "string",
+            "description": "room name"
+          },
+          "anticipating": {
+            "type": "boolean",
+            "description": "whether a device is currently anticipating or not"
+          },
+          "humidity": {
+            "type": "integer",
+            "description": "measure of relative humidity"
+          },
+          "open_window": {
+            "type": "boolean",
+            "description": "indicates if a window is opened"
+          },
+          "heating_power_request": {
+            "type": "integer",
+            "description": "Represents the percentage of heating the valves of a room are asking for (valves only)"
+          },
+          "therm_measured_temperature": {
+            "type": "integer",
+            "description": "measured temperature"
+          },
+          "therm_setpoint_start_time": {
+            "type": "integer",
+            "description": "Start unix timestamp when a manual setpoint is set"
+          },
+          "therm_setpoint_end_time": {
+            "type": "integer",
+            "description": "The end time of a manual setpoint in unix timestamp. 2147483647 = until a new order"
+          },
+          "therm_setpoint_mode": {
+            "type": "string",
+            "description": "The thermostat mode in which the room is. For a room controlled by a BNS, mode can be home, manual, max or hg/off (if heating/cooling). For a room controlled by a NLC, mode can be off, manual or hg.",
+            "enum": [
+              "manual",
+              "max",
+              "off",
+              "home",
+              "hg",
+              "schedule",
+              "away"
+            ]
+          },
+          "cooling_setpoint_start_time": {
+            "type": "integer",
+            "description": "Start unix timestamp when a manual setpoint is set"
+          },
+          "cooling_setpoint_end_time": {
+            "type": "integer",
+            "description": "The end time of a manual setpoint in unix timestamp. 2147483647 = until a new order"
+          },
+          "cooling_setpoint_mode": {
+            "type": "string",
+            "description": "The thermostat mode in which the room is. Off mode is used when the home is in cooling, hg (frostguard) is used when the home is in Heating",
+            "enum": [
+              "manual",
+              "max",
+              "off",
+              "home"
+            ]
+          },
+          "therm_setpoint_fp": {
+            "type": "string",
+            "description": "Usually used to control 'Fil pilote (FP)' setpoint",
+            "enum": [
+              "comfort",
+              "away",
+              "frost_guard",
+              "stand_by",
+              "comfort_1",
+              "comfort_2"
+            ]
+          }
+        }
+      },
+      "ModuleStatus": {
+        "type": "object",
+        "description": "Statuses of device/module. The status field depends on the product type.\nIf the product doesn't support the feature, the field will be absent.\n\nFor example,\n* NLP (Socket) has a feature to turn on/off, so the status field \"on\" will be presented. On the other hand,\n* NLV (roller shutter) doesn't have this feature, so the status field \"on\" will be absent\n",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "module id"
+          },
+          "type": {
+            "type": "string",
+            "description": "module type\nFor Home + Control products:\n  * `NLP` - Socket\n  * `NLF` - Switch\n  * `NLT` - Remote\n  * `NLM` - Micromodule\n  * `NLV` - Roller shutter\n  * `NLL` - Italian switch\n  * `NLPC` - Energy meter\n  * `NLPM` - Mobile socket\n  * `NLPO` - Connected contactor\n  * `NLC` - Cable outlet\n  * `BNS` - Smarther with Netatmo\n  * `OTH` - Smart Modulating Thermostat Relay\n  * `OTM` - Smart Modulating Thermostat\n  * `NRV` - Smart Valves\n  * `BNMH` - MyHome Server 1\n  * `BNTH` - Bticino Thermostat\n  * `BNFC` - Bticino Fan coil\n  * `BNTR` - Bticino module towel rail\n  * `BNCS` - Bticino module Controlled Socket\n  * `BNXM` - Bticino X meter\n  * `BNLD` - Bticino module lighting dimmer\n  * `BNIL` - Bticino intelligent light\n  * `BN3L` - Bticino 3rd party light\n  * `BNAB` - Bticino module automatic blind\n  * `BNAS` - Bticino module automatic shutter\n  * `BNMS` - Bticino module motorized shade\n",
+            "enum": [
+              "NLP",
+              "NLF",
+              "NLT",
+              "NLM",
+              "NLV",
+              "NLL",
+              "NLPC",
+              "NLPM",
+              "NLPO",
+              "NLC",
+              "BNS",
+              "OTH",
+              "OTM",
+              "NRV",
+              "BNMH",
+              "BNTH",
+              "BNFC",
+              "BNTR",
+              "BNCS",
+              "BNXM",
+              "BNXM",
+              "BNLD",
+              "BNIL",
+              "BN3L",
+              "BNAB",
+              "BNAS",
+              "BNMS"
+            ]
+          },
+          "on": {
+            "type": "boolean",
+            "description": "ON/OFF state of a switchable module"
+          },
+          "contactor_mode": {
+            "type": "boolean",
+            "description": "The current mode of the contactor",
+            "enum": [
+              "temporary_on",
+              "auto",
+              "off"
+            ]
+          },
+          "boiler_status": {
+            "type": "boolean",
+            "description": "Whether the boiler is ON or OFF"
+          },
+          "boiler_control": {
+            "type": "string",
+            "description": "how the product is able to communicate with the boiler (e.g. on/off or opentherm) for OTH",
+            "enum": [
+              "onoff",
+              "opentherm",
+              "detecting"
+            ]
+          },
+          "boiler_error": {
+            "type": "string",
+            "description": "boiler error for opentherm protocol",
+            "enum": [
+              "boiler_not_responding",
+              "maintenance",
+              "water_pressure",
+              "boiler_flame",
+              "air_pressure",
+              "boiler_temperature"
+            ]
+          },
+          "dhw_control": {
+            "type": "string",
+            "description": "whether the device is linked to a boiler controlling domestic hot water (used for OTH)",
+            "enum": [
+              "none",
+              "instantaneous",
+              "water_tank"
+            ]
+          },
+          "cooler_status": {
+            "type": "boolean",
+            "description": "Whether the cooler is ON or OFF"
+          },
+          "current_position": {
+            "type": "integer",
+            "description": "Current position of a roller shutter",
+            "minimum": 0,
+            "maximum": 100,
+            "readOnly": true
+          },
+          "scenario": {
+            "type": "string",
+            "description": "ID of scenario to launch",
+            "writeOnly": true
+          },
+          "target_position": {
+            "type": "integer",
+            "description": "Target position of a roller shutter. 100 = open, 0 = close, -1 stop",
+            "minimum": -1,
+            "maximum": 100
+          },
+          "target_position:step": {
+            "type": "integer",
+            "description": "Minimum step value of target_position. The target_position can only be incremented in multiples of this step value",
+            "minimum": 0,
+            "maximum": 100,
+            "readOnly": true
+          },
+          "brightness": {
+            "type": "integer",
+            "description": "Brightness level of a dimmable switch/light",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "battery_state": {
+            "type": "string",
+            "description": "Battery state of a module. This is an interpretation of battery_level",
+            "readOnly": true,
+            "enum": [
+              "very_low",
+              "low",
+              "medium",
+              "high",
+              "full"
+            ]
+          },
+          "firmware_revision": {
+            "type": "integer",
+            "description": "module firmware version",
+            "example": 34,
+            "readOnly": true
+          },
+          "rf_strength": {
+            "type": "integer",
+            "description": "radio frequency strength",
+            "example": 10,
+            "readOnly": true
+          },
+          "last_seen": {
+            "type": "integer",
+            "description": "last unix timestamp that Gateway communicates with this module",
+            "example": 1596098568,
+            "readOnly": true
+          },
+          "power": {
+            "type": "integer",
+            "description": "a measure of the electric power being delivered by the module, in Watt.",
+            "example": 10
+          },
+          "offload": {
+            "type": "boolean",
+            "description": "Whether or not the device has overcome its load. Only for NLP, NLPM, NLPO or NLC",
+            "readOnly": true
+          },
+          "offload_meters": {
+            "type": "array",
+            "description": "List of smart shedder id used by offload algorithm",
+            "items": {
+              "type": "string",
+              "example": "00:xx:xx:00:00:xx:xx:xx"
+            }
+          },
+          "wifi_strength": {
+            "type": "integer",
+            "description": "wifi strength",
+            "example": 20,
+            "readOnly": true
+          },
+          "reachable": {
+            "type": "boolean",
+            "description": "whether the module is reachable",
+            "readOnly": true
+          },
+          "bridge": {
+            "type": "string",
+            "description": "the main device id to which this module associates\nif this module itself is a main device such as Legrand Gateway, this field will be absent\n"
+          }
+        }
+      },
+      "Getmeasure": {
+        "type": "object",
+        "properties": {
+          "beg_time": {
+            "type": "number",
+            "example": 1513295900
+          },
+          "step_time": {
+            "type": "number",
+            "example": 1800
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "example": 50
+            }
+          }
+        }
+      },
+      "Roommeasure": {
+        "type": "object",
+        "properties": {
+          "beg_time": {
+            "type": "number",
+            "format": "int64",
+            "example": 1513259100
+          },
+          "step_time": {
+            "type": "number",
+            "format": "int64",
+            "example": 1800
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomTempValues"
+            }
+          }
+        }
+      },
+      "RoomTempValues": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "example": 17
+          }
+        }
+      },
+      "HomeScenario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "555c91a7fe775984658b45ca"
+          },
+          "modules": {
+            "type": "array",
+            "description": "scenarios of modules",
+            "items": {
+              "$ref": "#/components/schemas/ModuleScenario"
+            },
+            "example": [
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "scenarios": [
+                  {
+                    "id": "away"
+                  },
+                  {
+                    "id": "home",
+                    "on": true
+                  }
+                ]
+              },
+              {
+                "id": "00:xx:xx:xx:xx:xx:xx:xx",
+                "scenarios": [
+                  {
+                    "id": "away",
+                    "target_position": 100
+                  },
+                  {
+                    "id": "home",
+                    "target_position": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "scenarios": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the scenario",
+                "enum": [
+                  "home",
+                  "away",
+                  "wake_up",
+                  "bedtime",
+                  "custom_1",
+                  "custom_2",
+                  "custom_3",
+                  "custom_4"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "home",
+                  "away",
+                  "wake_up",
+                  "bedtime",
+                  "party",
+                  "music",
+                  "tv",
+                  "work",
+                  "relaxation",
+                  "reading",
+                  "sport",
+                  "romantic",
+                  "holidays",
+                  "other"
+                ]
+              },
+              "customizable": {
+                "type": "boolean",
+                "description": "whether the scenario can be customized by the user",
+                "example": true
+              }
+            }
+          }
+        }
+      },
+      "ModuleScenario": {
+        "type": "object",
+        "required": [
+          "id",
+          "scenarios"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "module id",
+            "example": "00:xx:xx:xx:xx:xx:xx:xx"
+          },
+          "scenarios": {
+            "type": "array",
+            "description": "scenarios of modules",
+            "items": {
+              "$ref": "#/components/schemas/Scenario"
+            }
+          }
+        }
+      },
+      "Scenario": {
+        "type": "object",
+        "description": "A scenario that will apply command to modules when it's launched.\nThe available commands are the same one in setState, such as \"on\" for NLP\n",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "scenario id",
+            "example": "away"
+          },
+          "on": {
+            "type": "boolean",
+            "description": "ON/OFF state that will apply on the module when the scenario is launched"
+          },
+          "target_position": {
+            "type": "integer",
+            "description": "Target position of a roller shutter that will apply on the module when the scenario is launched",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "SyncError": {
+        "type": "object",
+        "description": "Error from physical devices such as the device can't parse the parameter",
+        "required": [
+          "id",
+          "code"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "device/module id that causes the error",
+            "example": "00:xx:xx:xx:xx:xx"
+          },
+          "code": {
+            "type": "integer",
+            "description": "error code\n* 1 - Unknown error\n* 2 - Internal error\n* 3 - Parser error\n* 4 - Command unknown node module error\n* 5 - Command invalid params\n* 6 - Unreachable\n",
+            "example": 6
+          }
+        }
+      },
+      "ServerResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "time_exec": {
+            "type": "number",
+            "example": "0.060059070587158"
+          },
+          "time_server": {
+            "type": "integer",
+            "example": "1553777827"
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "description": "Error at API level such as token is invalid",
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "integer",
+                "description": "API error code\n* 1 - Missing access token\n* 2 - Invalid access token\n* 3 - Access token expired\n* 4 - Inconsistency error\n* 7 - Nothing to modify\n* 9 - Device not found\n* 10 - Missing parameters\n* 11 - Internal error\n* 13 - Forbidden operation\n* 21 - Invalid parameters\n* 23 - User not found\n* 31 - Not found\n",
+                "example": 2
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message",
+                "example": "Invalid access token"
+              }
+            }
+          }
+        }
+      },
+      "InvalidServerResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 0
+              },
+              "message": {
+                "type": "string",
+                "example": "explicit error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://api.netatmo.com/oauth2/authorize",
+            "tokenUrl": "https://api.netatmo.com/oauth2/token",
+            "scopes": {
+              "read_magellan": "read product data",
+              "write_magellan": "control products"
+            }
+          }
+        }
+      },
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
