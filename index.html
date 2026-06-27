@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonAtmo ⚡ Connexion Netatmo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="./index.css"/>
+</head>
+<body>
+
+<div class="stars-small" aria-hidden="true"></div>
+<div class="stars-medium" aria-hidden="true"></div>
+<div class="stars-large" aria-hidden="true"></div>
+
+<h1>MonAtmo ⚡ Connexion Netatmo</h1>
+
+<div class="top-cards">
+    <div class="card">
+        <h2>Centre de commande</h2>
+        <p>Récupérez ces informations sur <a href="https://dev.netatmo.com/apps/"
+                                             target="_blank">dev.netatmo.com/apps/</a> :</p>
+        <div>
+            <label>Client ID :</label>
+            <input id="clientId" placeholder="Ex: 5f4e3d2c1b9a8..." value="">
+        </div>
+        <div>
+            <label>Client Secret :</label>
+            <input id="clientSecret" placeholder="Ex: a1b2c3d4e5..." value="" type="password">
+        </div>
+        <div>
+            <label>Redirect URI :</label>
+            <input id="redirectUri" placeholder="Ex: https://ctamisier.github.io/monatmo/"
+                   value="">
+        </div>
+        <div>
+            <label>Scopes (séparés par des espaces) :</label>
+            <input id="scope" placeholder="Ex: read_magellan read_smarther" value="">
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button id="save-config-btn" type="button">Enregistrer</button>
+            <button id="clear-storage-btn" type="button">Nettoyer le LocalStorage</button>
+        </div>
+        <div id="config-status"></div>
+    </div>
+
+    <div class="card" id="auth-card">
+        <h2>Embarquement</h2>
+        <p>Cliquez ci-dessous pour vous connecter à votre compte Netatmo.</p>
+        <button id="auth-button" type="button" disabled>Se connecter avec Netatmo</button>
+        <div id="auth-error" class="error hidden"></div>
+    </div>
+
+    <div class="card hidden" id="token-card">
+        <h2>Jeton orbital</h2>
+        <div class="success">Connecté avec succès !</div>
+        <p><strong>Access Token :</strong> <span id="access-token" class="token-display">••••••••</span></p>
+        <p><strong>Refresh Token :</strong> <span id="refresh-token" class="token-display">••••••••</span></p>
+        <p><strong>Expire dans :</strong> <span id="expires-in">N/A</span> secondes</p>
+        <p><strong>Scopes :</strong> <span id="token-scope">N/A</span></p>
+        <div class="temperature-nav">
+            <button id="logout-btn" type="button">Se déconnecter</button>
+        </div>
+    </div>
+</div>
+
+<div class="card hidden" id="homes-card">
+    <h2>Stations</h2>
+    <div id="homes-error" class="error" style="display:none;"></div>
+    <div id="homes-list" class="room-list"></div>
+</div>
+
+<div class="card hidden" id="temperature-card">
+    <h2>Thermorégulation</h2>
+
+    <div id="temp-error" class="error" style="display:none;"></div>
+
+    <div id="temperature-rooms-section" style="display:none;">
+        <div id="temperature-rooms-list" class="room-list"></div>
+    </div>
+
+    <div id="temperature-chart-section" style="display:none;">
+        <div class="chart-container">
+            <canvas id="temperatureChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<div class="card hidden" id="lights-card">
+    <h2>Illuminations</h2>
+    <div id="lights-error" class="error" style="display:none;"></div>
+    <div id="lights-modules-section" style="display:none;">
+        <div id="lights-modules-list" class="room-list"></div>
+    </div>
+</div>
+
+<div class="card hidden" id="shutters-card">
+    <h2>Boucliers</h2>
+
+    <div id="shutters-error" class="error" style="display:none;"></div>
+
+    <div id="shutters-modules-section" style="display:none;">
+        <div id="shutters-modules-list" class="room-list"></div>
+    </div>
+
+    <div id="shutters-control-section" style="display:none;">
+        <div id="shutter-info" style="margin-bottom:20px;"></div>
+        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+            <button onclick="controlShutter('open')" style="background:#4caf50;" class="shutter-control-btn">Ouvrir
+            </button>
+            <button onclick="controlShutter('open-soft')" style="background:#8bc34a;" class="shutter-control-btn">
+                Ouverture douce
+            </button>
+            <button onclick="controlShutter('close')" style="background:#f44336;" class="shutter-control-btn">Fermer
+            </button>
+            <button onclick="controlShutter('stop')" style="background:#ff9800;" class="shutter-control-btn">Stop
+            </button>
+        </div>
+        <div class="shutter-position-presets" aria-label="Positions prédéfinies">
+            <button onclick="setShutterPosition(10)">10%</button>
+            <button onclick="setShutterPosition(20)">20%</button>
+            <button onclick="setShutterPosition(30)">30%</button>
+            <button onclick="setShutterPosition(40)">40%</button>
+            <button onclick="setShutterPosition(50)">50%</button>
+            <button onclick="setShutterPosition(60)">60%</button>
+            <button onclick="setShutterPosition(70)">70%</button>
+            <button onclick="setShutterPosition(80)">80%</button>
+            <button onclick="setShutterPosition(90)">90%</button>
+        </div>
+        <div style="margin-bottom:15px;">
+            <label>Position (0-100) :</label>
+            <input type="number" id="shutter-position" min="0" max="100" value="50"
+                   style="width:auto; display:inline-block; margin-left:10px;">
+            <button onclick="controlShutter('position')" style="margin-left:10px;">Positionner</button>
+        </div>
+        <div id="shutter-status" class="info" style="display:none;"></div>
+    </div>
+
+</div>
+
+<script type="module">
+    import {initAuth} from './auth/auth.js';
+    import {loadHomes} from "./home/home.js";
+    import {resetAppOnLogout} from "./auth/auth.js";
+
+    window.API = {
+        BASE: 'https://api.netatmo.com/api'
+    };
+
+    function resetAppOnStorageClear() {
+        document.getElementById('temperature-card').classList.add('hidden');
+        document.getElementById('shutters-card').classList.add('hidden');
+        document.getElementById('lights-card').classList.add('hidden');
+    }
+
+    function init() {
+        initAuth({
+            onAuthenticated: () => {
+                setTimeout(() => {
+                    loadHomes();
+                }, 100);
+            },
+            onLogout: resetAppOnLogout,
+            onStorageCleared: resetAppOnStorageClear
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
