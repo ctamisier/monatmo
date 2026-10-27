@@ -10,11 +10,12 @@ const PROACTIVE_REFRESH_SECONDS = 10 * 60
 export const useAuthStore = defineStore('auth', () => {
   const config = ref<ServerConfig | null>(null)
   const token = ref<TokenData | null>(getValidToken())
+  const isInitialized = ref(false)
 
   const isAuthenticated = computed(() => token.value !== null)
   const canConnect = computed(() => config.value !== null)
 
-  async function init() {
+  async function init(): Promise<void> {
     try {
       config.value = await fetchConfig()
     } catch (e: unknown) {
@@ -23,25 +24,25 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function connect() {
+  function connect(): void {
     if (!config.value) return
     startAuth(config.value)
   }
 
-  async function processCallback() {
+  async function processCallback(): Promise<TokenData | null> {
     try {
       const result = await handleCallback()
       if (result) {
         token.value = result
       }
-      return token.value
+      return result
     } catch (e: unknown) {
       console.error('Callback processing error:', e)
       return null
     }
   }
 
-  async function checkExistingToken() {
+  async function checkExistingToken(): Promise<TokenData | null> {
     try {
       const currentToken = getValidToken()
       if (currentToken) {
@@ -62,6 +63,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function initialize(): Promise<boolean> {
+    const configPromise = init()
+
+    const callbackToken = await processCallback()
+    await checkExistingToken()
+
+    if (!isAuthenticated.value) {
+      await configPromise
+    }
+
+    isInitialized.value = true
+    return callbackToken !== null
+  }
+
   function logout() {
     removeToken()
     token.value = null
@@ -73,10 +88,12 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     isAuthenticated,
     canConnect,
+    isInitialized,
     init,
     connect,
     processCallback,
     checkExistingToken,
+    initialize,
     logout,
   }
 })

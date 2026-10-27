@@ -26,17 +26,11 @@ function refreshPage() {
 }
 
 onMounted(async () => {
-  await auth.init()
-  try {
-    const result = await auth.processCallback()
-    if (result) {
-      successMessage.value = t('app.success')
-      setTimeout(() => { successMessage.value = '' }, STATUS_MESSAGE_DURATION)
-    }
-  } catch (e: unknown) {
-    console.error('Callback error:', e)
+  const justConnected = await auth.initialize()
+  if (justConnected) {
+    successMessage.value = t('app.success')
+    setTimeout(() => { successMessage.value = '' }, STATUS_MESSAGE_DURATION)
   }
-  auth.checkExistingToken()
 })
 </script>
 
@@ -71,9 +65,16 @@ onMounted(async () => {
       </div>
     </div>
 
-    <AuthLanding v-if="!auth.isAuthenticated" />
+    <div
+      v-if="!auth.isInitialized"
+      class="auth-loading"
+    >
+      <span class="loading loading-spinner loading-lg text-[#e05297]" />
+    </div>
 
-    <template v-if="auth.isAuthenticated">
+    <AuthLanding v-else-if="!auth.isAuthenticated" />
+
+    <template v-else>
       <div class="relative z-10 mt-5">
         <HomeCard />
       </div>
@@ -120,6 +121,16 @@ onMounted(async () => {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.auth-loading {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 180px);
+  min-height: calc(100dvh - 180px);
 }
 
 .build-date {
