@@ -11,12 +11,12 @@ export const TOOLTIP_CURSOR_COLOR = '#f0c040'
 
 export const OUTDOOR_DATASET_ID = 'outdoor'
 
-export const CHART_COLORS = [
+export const CHART_COLORS: readonly string[] = [
   '#f4845f', '#e05297', '#7b5ea7', '#f0c040', '#c97bdb',
   '#d9735a', '#b06ab3', '#8e6cb5', '#e8956d', '#a678c2',
   '#6edc9f', '#4ecdc4', '#45b7d1', '#96e6a1', '#dda0dd',
   '#ff9a9e', '#fad0c4', '#ffecd2', '#fcb69f', '#ffeaa7',
-] as const
+]
 
 export const TIME_DISPLAY_FORMATS: Record<ChartScale, Record<string, string>> = {
   '30min': { minute: 'HH:mm' },

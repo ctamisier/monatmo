@@ -4,7 +4,8 @@ import { useI18n } from 'vue-i18n'
 import type { Chart as ChartInstance } from 'chart.js'
 import { useDragZoom } from '../../composables/useDragZoom'
 import { OUTDOOR_DATASET_ID, TIME_DISPLAY_FORMATS } from '../../constants/chart'
-import { createTemperatureChart } from '../../utils/temperatureChart'
+import { createTemperatureChart, updateTemperatureChart } from '../../utils/temperatureChart'
+import type { TemperatureChartParams } from '../../utils/temperatureChart'
 import type { ChartScale, ChartScaleOption, TemperatureDataset, TemperaturePoint } from '../../types/temperature'
 import IconRefresh from '../icons/IconRefresh.vue'
 
@@ -27,6 +28,7 @@ const { t, locale } = useI18n()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 let chartInstance: ChartInstance<'line', TemperaturePoint[]> | null = null
+let chartLocale: string | null = null
 
 const chartDatasets = computed(() => props.datasets.map((dataset) =>
   dataset.id === OUTDOOR_DATASET_ID
@@ -34,26 +36,43 @@ const chartDatasets = computed(() => props.datasets.map((dataset) =>
     : dataset,
 ))
 
+const chartParams = computed<TemperatureChartParams>(() => ({
+  datasets: chartDatasets.value,
+  dateBegin: props.dateBegin,
+  dateEnd: props.dateEnd,
+  displayFormat: TIME_DISPLAY_FORMATS[props.selectedScale],
+  xAxisLabel: t('temperature.chart.xAxis'),
+  yAxisLabel: t('temperature.chart.yAxis'),
+  locale: locale.value,
+}))
+
 const chartAriaLabel = computed(() => `${t('temperature.title')} — ${t('temperature.chart.yAxis')}`)
 
 function renderChart(): void {
   const canvasElement = canvas.value
   if (!canvasElement) return
 
-  chartInstance?.destroy()
-  chartInstance = null
+  if (chartParams.value.datasets.length === 0) {
+    chartInstance?.destroy()
+    chartInstance = null
+    chartLocale = null
+    return
+  }
 
-  if (chartDatasets.value.length === 0) return
+  // Les callbacks du tooltip capturent la locale : elle seule impose de
+  // reconstruire le graphe, tout le reste est mis à jour en place.
+  if (chartInstance && chartLocale !== locale.value) {
+    chartInstance.destroy()
+    chartInstance = null
+  }
 
-  chartInstance = createTemperatureChart(canvasElement, {
-    datasets: chartDatasets.value,
-    dateBegin: props.dateBegin,
-    dateEnd: props.dateEnd,
-    displayFormat: TIME_DISPLAY_FORMATS[props.selectedScale],
-    xAxisLabel: t('temperature.chart.xAxis'),
-    yAxisLabel: t('temperature.chart.yAxis'),
-    locale: locale.value,
-  })
+  if (chartInstance) {
+    updateTemperatureChart(chartInstance, chartParams.value)
+    return
+  }
+
+  chartLocale = locale.value
+  chartInstance = createTemperatureChart(canvasElement, chartParams.value)
 }
 
 useDragZoom(canvas, {
@@ -63,7 +82,7 @@ useDragZoom(canvas, {
 })
 
 watch(
-  [chartDatasets, () => props.dateBegin, () => props.dateEnd, () => props.selectedScale, locale],
+  chartParams,
   () => nextTick(renderChart),
 )
 

@@ -141,27 +141,25 @@ export const useTemperatureStore = defineStore('temperature', () => {
     if (!homeId || !home) return []
 
     const scale = selectedScale.value
-    const datasets: TemperatureDataset[] = []
-
-    for (let index = 0; index < selectedRoomIds.value.length; index += 1) {
-      const roomId = selectedRoomIds.value[index]
+    const requests = selectedRoomIds.value.map(async (roomId, index): Promise<TemperatureDataset | null> => {
       const response = await fetchRoomMeasure(homeId, roomId, scale, 'temperature', dateBegin.value, dateEnd.value)
       const data = parseMeasures(normalizeBody(response.body))
 
-      if (data.length === 0) continue
+      if (data.length === 0) return null
 
       const room = home.rooms.find((candidate) => candidate.id === roomId)
       const color = CHART_COLORS[index % CHART_COLORS.length]
-      datasets.push({
+      return {
         id: roomId,
         label: room?.name || roomId,
         data,
         borderColor: color,
         pointBackgroundColor: color,
-      })
-    }
+      } satisfies TemperatureDataset
+    })
 
-    return datasets
+    const datasets = await Promise.all(requests)
+    return datasets.filter((dataset): dataset is TemperatureDataset => dataset !== null)
   }
 
   function findClosestPoint(sortedPoints: readonly TemperaturePoint[], targetX: number): TemperaturePoint {
@@ -261,11 +259,13 @@ export const useTemperatureStore = defineStore('temperature', () => {
     try {
       const roomDatasets = await buildRoomDatasets()
       if (requestId !== chartRequestId) return
-      chartDatasets.value = roomDatasets
 
       const outdoorDataset = await loadOutdoorDataset(roomDatasets)
       if (requestId !== chartRequestId) return
-      if (outdoorDataset) chartDatasets.value = [...roomDatasets, outdoorDataset]
+
+      // Une seule publication : le graphe n'est reconstruit qu'une fois par
+      // chargement, au lieu d'apparaître sans puis avec la courbe extérieure.
+      chartDatasets.value = outdoorDataset ? [...roomDatasets, outdoorDataset] : roomDatasets
     } catch (e: unknown) {
       if (requestId === chartRequestId) {
         setError(e instanceof Error ? e.message : t('errors.loadingData'))
