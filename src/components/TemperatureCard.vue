@@ -20,6 +20,7 @@ import {GRID_LINE_COLOR, CROSSHAIR_COLOR, TOOLTIP_CURSOR_COLOR, TOOLTIP_OFFSET_Y
 import ToastNotification from './ToastNotification.vue'
 import IconArrowDown from './icons/IconArrowDown.vue'
 import IconArrowUp from './icons/IconArrowUp.vue'
+import IconRefresh from './icons/IconRefresh.vue'
 
 Chart.register(Tooltip, LineController, LineElement, PointElement, LinearScale, TimeScale, Filler)
 
@@ -420,27 +421,26 @@ onUnmounted(() => {
         v-if="tempStore.thermostatRoomIds.size > 0"
         class="mt-6"
       >
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div class="join">
             <button
-              v-if="tempStore.dateBegin != null"
-              class="btn btn-xs btn-ghost"
-              @click="resetZoom"
+              v-for="scale in tempStore.availableScales"
+              :key="scale.value"
+              class="join-item btn btn-sm"
+              :class="tempStore.selectedScale === scale.value ? 'btn-active btn-primary' : ''"
+              @click="setScale(scale.value)"
             >
-              {{ t('temperature.chart.resetZoom') }}
+              {{ t(scale.i18nKey) }}
             </button>
-            <div class="join">
-              <button
-                v-for="scale in tempStore.availableScales"
-                :key="scale.value"
-                class="join-item btn btn-sm"
-                :class="tempStore.selectedScale === scale.value ? 'btn-active btn-primary' : ''"
-                @click="setScale(scale.value)"
-              >
-                {{ t(scale.i18nKey) }}
-              </button>
-            </div>
           </div>
+          <button
+            v-if="tempStore.dateBegin != null"
+            class="btn btn-sm btn-outline"
+            @click="resetZoom"
+          >
+            <IconRefresh class="size-4" />
+            {{ t('temperature.chart.resetZoom') }}
+          </button>
         </div>
         <div
           class="relative h-80"
