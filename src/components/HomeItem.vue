@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useWeatherData } from '../composables/useWeatherData'
 import { useHomeStore } from '../stores/home.store'
@@ -13,8 +13,15 @@ const { t } = useI18n()
 const homeStore = useHomeStore()
 const { temperature, humidity, stationName, loading, error, fetchFromCoords } = useWeatherData()
 
-function isSelected() {
-  return props.home.id === homeStore.selectedHomeId
+const isSelected = computed(() => props.home.id === homeStore.selectedHomeId)
+
+// Une station unique est sélectionnée d'office : la carte devient un simple
+// indicateur, sans clic ni survol.
+const isSelectable = computed(() => homeStore.homes.length > 1)
+
+function selectHome(): void {
+  if (!isSelectable.value || isSelected.value) return
+  void homeStore.selectHome(props.home.id)
 }
 
 onMounted(() => {
@@ -27,8 +34,11 @@ onMounted(() => {
 <template>
   <div
     class="card-custom card-inner"
-    :class="isSelected() ? 'border-[#e05297]!' : ''"
-    @click="homeStore.selectHome(home.id)"
+    :class="{
+      'border-[#e05297]!': isSelected,
+      'pointer-events-none': !isSelectable,
+    }"
+    @click="selectHome"
   >
     <div class="card-body">
       <h4 class="card-title">

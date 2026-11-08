@@ -40,6 +40,10 @@ export const useHomeStore = defineStore('home', () => {
   }
 
   async function selectHome(homeId: string) {
+    // Re-sélectionner la maison déjà affichée relancerait un appel réseau
+    // inutile : on ne fait rien tant qu'aucune autre maison n'est demandée.
+    if (homeId === selectedHomeId.value && homeStatus.value) return
+
     selectedHomeId.value = homeId
     loading.value = true
     setError(null)
