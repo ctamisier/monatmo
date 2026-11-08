@@ -1,3 +1,5 @@
+import type { ChartScale } from '../types/temperature'
+
 export const DAY_MS = 24 * 3_600_000
 
 export const SCALE_30MIN_MAX_DAYS = 20
@@ -6,6 +8,21 @@ export const SCALE_1HOUR_MAX_DAYS = 45
 export const GRID_LINE_COLOR = '#808c94'
 export const CROSSHAIR_COLOR = '#999'
 export const TOOLTIP_CURSOR_COLOR = '#f0c040'
+
+export const OUTDOOR_DATASET_ID = 'outdoor'
+
+export const CHART_COLORS = [
+  '#f4845f', '#e05297', '#7b5ea7', '#f0c040', '#c97bdb',
+  '#d9735a', '#b06ab3', '#8e6cb5', '#e8956d', '#a678c2',
+  '#6edc9f', '#4ecdc4', '#45b7d1', '#96e6a1', '#dda0dd',
+  '#ff9a9e', '#fad0c4', '#ffecd2', '#fcb69f', '#ffeaa7',
+] as const
+
+export const TIME_DISPLAY_FORMATS: Record<ChartScale, Record<string, string>> = {
+  '30min': { minute: 'HH:mm' },
+  '1hour': { minute: 'HH:mm' },
+  '1day': { hour: 'dd/MM HH:mm' },
+}
 
 export const TOOLTIP_OFFSET_Y = 15
 export const TOOLTIP_PADDING = 12

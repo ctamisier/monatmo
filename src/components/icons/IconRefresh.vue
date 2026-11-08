@@ -1,13 +1,17 @@
 <script setup lang="ts">
-defineProps<{ class?: string }>()
+defineProps<{ class?: string; width?: number; height?: number }>()
 </script>
 
 <template>
   <svg
+    :width="width ?? 20"
+    :height="height ?? 20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     stroke-width="1.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
     :class="$props.class"
   >
     <path d="M1 4v6h6" />

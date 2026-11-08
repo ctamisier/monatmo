@@ -1,22 +1,23 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { i18n } from '../i18n'
 import { fetchRoomMeasure, setRoomThermpoint } from '../services/netatmo.service'
 import { fetchTemperatureForecast, fetchTemperatureArchive, isWithinForecastRange, toDateString } from '../services/openmeteo.service'
 import { useHomeStore } from './home.store'
-import { DAY_MS, SCALE_30MIN_MAX_DAYS, SCALE_1HOUR_MAX_DAYS, DEFAULT_TEMPERATURE, DEFAULT_RANGE_DAYS, TOOLTIP_CURSOR_COLOR } from '../constants/chart'
-import type { RoomMeasure } from '../types/netatmo'
+import {
+  CHART_COLORS,
+  DAY_MS,
+  DEFAULT_RANGE_DAYS,
+  DEFAULT_TEMPERATURE,
+  OUTDOOR_DATASET_ID,
+  SCALE_1HOUR_MAX_DAYS,
+  SCALE_30MIN_MAX_DAYS,
+  TOOLTIP_CURSOR_COLOR,
+} from '../constants/chart'
+import type { NetatmoHome, RoomMeasure } from '../types/netatmo'
+import type { ChartScale, ChartScaleOption, TemperatureDataset, TemperaturePoint, TemperatureValve } from '../types/temperature'
 
-const CHART_COLORS = [
-  '#f4845f', '#e05297', '#7b5ea7', '#f0c040', '#c97bdb',
-  '#d9735a', '#b06ab3', '#8e6cb5', '#e8956d', '#a678c2',
-  '#6edc9f', '#4ecdc4', '#45b7d1', '#96e6a1', '#dda0dd',
-  '#ff9a9e', '#fad0c4', '#ffecd2', '#fcb69f', '#ffeaa7',
-]
-
-export type ChartScale = '30min' | '1hour' | '1day'
-
-const CHART_SCALES: { value: ChartScale; i18nKey: string }[] = [
+const CHART_SCALES: readonly ChartScaleOption[] = [
   { value: '30min', i18nKey: 'temperature.chart.scales.30min' },
   { value: '1hour', i18nKey: 'temperature.chart.scales.1hour' },
   { value: '1day', i18nKey: 'temperature.chart.scales.1day' },
@@ -30,51 +31,66 @@ export const useTemperatureStore = defineStore('temperature', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
   const errorCount = ref(0)
+  const chartDatasets = ref<TemperatureDataset[]>([])
   const { t } = i18n.global
-
-  function setError(msg: string | null) {
-    error.value = msg
-    if (msg) errorCount.value++
-  }
-  const chartDatasets = ref<{ label: string; data: { x: number; y: number }[]; borderColor: string; pointBackgroundColor: string; borderDash?: number[] }[]>([])
 
   const homeStore = useHomeStore()
 
-  const availableScales = computed(() => {
+  // Chaque chargement prend un identifiant : seule la réponse la plus récente
+  // est appliquée, ce qui évite les résultats croisés quand l'utilisateur
+  // enchaîne les zooms ou les changements d'échelle.
+  let chartRequestId = 0
+
+  function setError(message: string | null): void {
+    error.value = message
+    if (message) errorCount.value += 1
+  }
+
+  const availableScales = computed<readonly ChartScaleOption[]>(() => {
     let durationMs: number
+
     if (dateBegin.value != null && dateEnd.value != null) {
       durationMs = (dateEnd.value - dateBegin.value) * 1000
     } else {
-      const allPoints = chartDatasets.value.flatMap((d) => d.data)
-      if (allPoints.length < 2) return CHART_SCALES
-      durationMs = Math.max(...allPoints.map((p) => p.x)) - Math.min(...allPoints.map((p) => p.x))
+      const bounds = getTimeBounds(chartDatasets.value.flatMap((dataset) => dataset.data))
+      if (!bounds) return CHART_SCALES
+      durationMs = bounds.max - bounds.min
     }
-    return CHART_SCALES.filter((s) => {
-      if (s.value === '30min') return durationMs < SCALE_30MIN_MAX_DAYS * DAY_MS
-      if (s.value === '1hour') return durationMs < SCALE_1HOUR_MAX_DAYS * DAY_MS
+
+    return CHART_SCALES.filter((scale) => {
+      if (scale.value === '30min') return durationMs < SCALE_30MIN_MAX_DAYS * DAY_MS
+      if (scale.value === '1hour') return durationMs < SCALE_1HOUR_MAX_DAYS * DAY_MS
       return true
     })
   })
 
   const thermostatRoomIds = computed(() => new Set(
     (homeStore.homeStatus?.rooms ?? [])
-      .filter((r) => r.therm_measured_temperature !== undefined)
-      .map((r) => r.id),
+      .filter((room) => room.therm_measured_temperature !== undefined)
+      .map((room) => room.id),
   ))
 
   const displayRooms = computed(() => {
     const home = homeStore.selectedHome
     const status = homeStore.homeStatus
-    if (!home || !status || !status.rooms || !status.modules) return []
+    if (!home || !status?.rooms || !status.modules) return []
 
     return home.rooms.filter((room) => {
-      const hasValve = home.modules.some((m) => m.room_id === room.id && m.type === 'NRV')
+      const hasValve = home.modules.some((module) => module.room_id === room.id && module.type === 'NRV')
       return thermostatRoomIds.value.has(room.id) || hasValve
     })
   })
 
-  function setScale(scale: ChartScale) {
-    selectedScale.value = scale
+  function getTimeBounds(points: readonly TemperaturePoint[]): { min: number; max: number } | null {
+    if (points.length === 0) return null
+
+    let min = points[0].x
+    let max = min
+    for (const point of points) {
+      if (point.x < min) min = point.x
+      if (point.x > max) max = point.x
+    }
+    return { min, max }
   }
 
   function pickScaleForDuration(durationMs: number): ChartScale {
@@ -83,51 +99,24 @@ export const useTemperatureStore = defineStore('temperature', () => {
     return '1day'
   }
 
-  async function zoomToDateRange(minX: number, maxX: number) {
-    const duration = maxX - minX
-    if (duration <= 0) return
-    selectedScale.value = pickScaleForDuration(duration)
-    dateBegin.value = Math.floor(minX / 1000)
-    dateEnd.value = Math.floor(maxX / 1000)
-    await loadChartData()
-    await loadOutdoorChartData()
-  }
-
-  async function resetZoom() {
-    dateBegin.value = undefined
-    dateEnd.value = undefined
-    selectedScale.value = '1day'
-    await loadChartData()
-    await loadOutdoorChartData()
-  }
-
-  function toggleRoomSelection(roomId: string) {
-    const index = selectedRoomIds.value.indexOf(roomId)
-    if (index > -1) {
-      selectedRoomIds.value.splice(index, 1)
-    } else {
-      selectedRoomIds.value.push(roomId)
-    }
-  }
-
-  function parseMeasures(measures: RoomMeasure[]): { x: number; y: number }[] {
-    const points: { x: number; y: number }[] = []
+  function parseMeasures(measures: RoomMeasure[]): TemperaturePoint[] {
+    const points: TemperaturePoint[] = []
 
     for (const measure of measures) {
-      const begTime = measure.beg_time * 1000
+      const beginTime = measure.beg_time * 1000
       const stepTime = measure.step_time * 1000
 
       if (measure.value && measure.value.length > 0) {
         measure.value.forEach((entry, index) => {
-          const tempValue = Array.isArray(entry) ? entry[0] : entry
-          if (tempValue !== undefined) {
-            points.push({ x: begTime + index * stepTime, y: tempValue })
+          const value = Array.isArray(entry) ? entry[0] : entry
+          if (value !== undefined) {
+            points.push({ x: beginTime + index * stepTime, y: value })
           }
         })
       } else if (measure.values && measure.values.length > 0) {
         measure.values.forEach((entry, index) => {
           if (entry.value !== undefined) {
-            points.push({ x: begTime + index * stepTime, y: entry.value })
+            points.push({ x: beginTime + index * stepTime, y: entry.value })
           }
         })
       }
@@ -139,120 +128,77 @@ export const useTemperatureStore = defineStore('temperature', () => {
   function normalizeBody(body: unknown): RoomMeasure[] {
     if (Array.isArray(body)) return body
     if (body && typeof body === 'object') {
-      const obj = body as Record<string, unknown>
-      if ('home' in obj && obj.home) return [obj.home as RoomMeasure]
-      if ('beg_time' in obj || 'value' in obj) return [obj as RoomMeasure]
+      const record = body as Record<string, unknown>
+      if ('home' in record && record.home) return [record.home as RoomMeasure]
+      if ('beg_time' in record || 'value' in record) return [record as RoomMeasure]
     }
     return []
   }
 
-  async function loadChartData() {
-    loading.value = true
-    setError(null)
-
-    try {
-      const home = homeStore.selectedHome
-      const scale = selectedScale.value
-      const datasets: { label: string; data: { x: number; y: number }[]; borderColor: string; pointBackgroundColor: string; borderDash?: number[] }[] = []
-
-      for (let i = 0; i < selectedRoomIds.value.length; i++) {
-        const roomId = selectedRoomIds.value[i]
-        const room = home?.rooms.find((r) => r.id === roomId)
-
-        const homeId = homeStore.selectedHomeId
-        if (!homeId) continue
-
-        const response = await fetchRoomMeasure(
-          homeId,
-          roomId,
-          scale,
-          'temperature',
-          dateBegin.value,
-          dateEnd.value,
-        )
-
-        const measures = normalizeBody(response.body)
-        const data = parseMeasures(measures)
-
-        if (data.length > 0) {
-          const color = CHART_COLORS[i % CHART_COLORS.length]
-          datasets.push({
-            label: room?.name || roomId,
-            data,
-            borderColor: color,
-            pointBackgroundColor: color,
-          })
-        }
-      }
-
-      chartDatasets.value = datasets
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : t('errors.loadingData'))
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function changeRoomTemperature(roomId: string, delta: number) {
-    const status = homeStore.homeStatus
-    if (!status || !homeStore.selectedHomeId) return
-
-    const roomStatus = status.rooms?.find((r) => r.id === roomId)
-    const currentTemp = roomStatus?.therm_setpoint_temperature ?? DEFAULT_TEMPERATURE
-    const newTemp = Math.round((currentTemp + delta) * 2) / 2
-
-    try {
-      await setRoomThermpoint(homeStore.selectedHomeId, roomId, 'manual', newTemp)
-      if (roomStatus) {
-        roomStatus.therm_setpoint_temperature = newTemp
-      }
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : t('errors.updateError'))
-    }
-  }
-
-  function getValveModulesForRoom(roomId: string) {
+  async function buildRoomDatasets(): Promise<TemperatureDataset[]> {
+    const homeId = homeStore.selectedHomeId
     const home = homeStore.selectedHome
-    const status = homeStore.homeStatus
-    if (!home || !status) return []
+    if (!homeId || !home) return []
 
-    return (home.modules || [])
-      .filter((module) => module.room_id === roomId && module.type === 'NRV')
-      .map((module) => {
-        const moduleStatus = status.modules?.find((s) => s.id === module.id)
-        return {
-          ...module,
-          batteryLevel: moduleStatus?.battery_level ?? module.battery_level,
-          batteryState: moduleStatus?.battery_state || module.battery_state || '--',
-        }
+    const scale = selectedScale.value
+    const datasets: TemperatureDataset[] = []
+
+    for (let index = 0; index < selectedRoomIds.value.length; index += 1) {
+      const roomId = selectedRoomIds.value[index]
+      const response = await fetchRoomMeasure(homeId, roomId, scale, 'temperature', dateBegin.value, dateEnd.value)
+      const data = parseMeasures(normalizeBody(response.body))
+
+      if (data.length === 0) continue
+
+      const room = home.rooms.find((candidate) => candidate.id === roomId)
+      const color = CHART_COLORS[index % CHART_COLORS.length]
+      datasets.push({
+        id: roomId,
+        label: room?.name || roomId,
+        data,
+        borderColor: color,
+        pointBackgroundColor: color,
       })
-  }
-
-  function reset() {
-    selectedRoomIds.value = []
-    selectedScale.value = '1day'
-    dateBegin.value = undefined
-    dateEnd.value = undefined
-    setError(null)
-  }
-
-  let outdoorLoading = false
-
-  async function loadOutdoorChartData() {
-    if (outdoorLoading) return
-    outdoorLoading = true
-
-    const home = homeStore.selectedHome
-    if (!home?.coordinates) {
-      outdoorLoading = false
-      return
     }
 
-    loading.value = true
-    const lon = home.coordinates[0]
-    const lat = home.coordinates[1]
+    return datasets
+  }
 
-    const allRoomPoints = chartDatasets.value.flatMap((d) => d.data)
+  function findClosestPoint(sortedPoints: readonly TemperaturePoint[], targetX: number): TemperaturePoint {
+    let low = 0
+    let high = sortedPoints.length - 1
+
+    while (low < high) {
+      const middle = (low + high) >> 1
+      if (sortedPoints[middle].x < targetX) low = middle + 1
+      else high = middle
+    }
+
+    const after = sortedPoints[low]
+    const before = sortedPoints[low - 1]
+    if (!before) return after
+
+    return Math.abs(after.x - targetX) < Math.abs(before.x - targetX) ? after : before
+  }
+
+  function alignOutdoorToRoomTimestamps(
+    roomPoints: readonly TemperaturePoint[],
+    outdoorPoints: readonly TemperaturePoint[],
+  ): TemperaturePoint[] {
+    const sortedOutdoor = [...outdoorPoints].sort((a, b) => a.x - b.x)
+    const timestamps = [...new Set(roomPoints.map((point) => point.x))].sort((a, b) => a - b)
+    return timestamps.map((timestamp) => ({
+      x: timestamp,
+      y: findClosestPoint(sortedOutdoor, timestamp).y,
+    }))
+  }
+
+  async function buildOutdoorDataset(roomDatasets: readonly TemperatureDataset[]): Promise<TemperatureDataset | null> {    const home: NetatmoHome | null = homeStore.selectedHome
+    if (!home?.coordinates) return null
+
+    const [lon, lat] = home.coordinates
+    const roomPoints = roomDatasets.flatMap((dataset) => dataset.data)
+    const bounds = getTimeBounds(roomPoints)
 
     let startMs: number
     let endMs: number
@@ -260,72 +206,150 @@ export const useTemperatureStore = defineStore('temperature', () => {
     if (dateBegin.value != null && dateEnd.value != null) {
       startMs = dateBegin.value * 1000
       endMs = dateEnd.value * 1000
-    } else if (allRoomPoints.length > 0) {
-      startMs = Math.min(...allRoomPoints.map((p) => p.x))
-      endMs = Math.max(...allRoomPoints.map((p) => p.x))
+    } else if (bounds) {
+      startMs = bounds.min
+      endMs = bounds.max
     } else {
-      const now = Date.now()
-      startMs = now - DEFAULT_RANGE_DAYS * DAY_MS
-      endMs = now
+      endMs = Date.now()
+      startMs = endMs - DEFAULT_RANGE_DAYS * DAY_MS
     }
+
+    const startDate = toDateString(startMs)
+    const endDate = toDateString(endMs)
+    const fetcher = isWithinForecastRange(startDate) ? fetchTemperatureForecast : fetchTemperatureArchive
+    const response = await fetcher(lat, lon, startDate, endDate)
+
+    const outdoorPoints: TemperaturePoint[] = []
+    response.hourly.time.forEach((timestamp, index) => {
+      const temperature = response.hourly.temperature_2m[index]
+      if (temperature != null) {
+        outdoorPoints.push({ x: timestamp * 1000, y: temperature })
+      }
+    })
+    if (outdoorPoints.length < 2) return null
+
+    const data = roomPoints.length > 0
+      ? alignOutdoorToRoomTimestamps(roomPoints, outdoorPoints)
+      : outdoorPoints
+    if (data.length === 0) return null
+
+    return {
+      id: OUTDOOR_DATASET_ID,
+      label: OUTDOOR_DATASET_ID,
+      data,
+      borderColor: TOOLTIP_CURSOR_COLOR,
+      pointBackgroundColor: TOOLTIP_CURSOR_COLOR,
+    }
+  }
+
+  async function loadOutdoorDataset(roomDatasets: readonly TemperatureDataset[]): Promise<TemperatureDataset | null> {
+    try {
+      return await buildOutdoorDataset(roomDatasets)
+    } catch (e: unknown) {
+      // La météo extérieure est un bonus : son échec ne doit pas masquer les
+      // courbes des pièces.
+      console.error('Outdoor temperature data error:', e)
+      return null
+    }
+  }
+
+  async function refreshChartData(): Promise<void> {
+    const requestId = ++chartRequestId
+    loading.value = true
+    setError(null)
 
     try {
-      const startStr = toDateString(startMs)
-      const endStr = toDateString(endMs)
-      const fetcher = isWithinForecastRange(startStr) ? fetchTemperatureForecast : fetchTemperatureArchive
-      const response = await fetcher(
-        lat,
-        lon,
-        startStr,
-        endStr,
-      )
+      const roomDatasets = await buildRoomDatasets()
+      if (requestId !== chartRequestId) return
+      chartDatasets.value = roomDatasets
 
-      const { time, temperature_2m } = response.hourly
-      const outdoorPoints: { x: number; y: number }[] = []
-      for (let i = 0; i < time.length; i++) {
-        const temp = temperature_2m[i]
-        if (temp != null) {
-          outdoorPoints.push({ x: time[i] * 1000, y: temp })
-        }
+      const outdoorDataset = await loadOutdoorDataset(roomDatasets)
+      if (requestId !== chartRequestId) return
+      if (outdoorDataset) chartDatasets.value = [...roomDatasets, outdoorDataset]
+    } catch (e: unknown) {
+      if (requestId === chartRequestId) {
+        setError(e instanceof Error ? e.message : t('errors.loadingData'))
       }
+    } finally {
+      if (requestId === chartRequestId) loading.value = false
+    }
+  }
 
-      if (outdoorPoints.length < 2) return
+  async function setScale(scale: ChartScale): Promise<void> {
+    selectedScale.value = scale
+    await refreshChartData()
+  }
 
-      let data: { x: number; y: number }[]
+  async function zoomToDateRange(minX: number, maxX: number): Promise<void> {
+    const duration = maxX - minX
+    if (duration <= 0) return
 
-      if (allRoomPoints.length > 0) {
-        const roomTimestamps = [...new Set(allRoomPoints.map((p) => p.x))]
-          .sort((a, b) => a - b)
-        data = roomTimestamps.map((ts) => {
-          let best = outdoorPoints[0]
-          for (const p of outdoorPoints) {
-            if (Math.abs(p.x - ts) < Math.abs(best.x - ts)) best = p
-          }
-          return { x: ts, y: best.y }
-        })
-      } else {
-        data = outdoorPoints
-      }
+    selectedScale.value = pickScaleForDuration(duration)
+    dateBegin.value = Math.floor(minX / 1000)
+    dateEnd.value = Math.floor(maxX / 1000)
+    await refreshChartData()
+  }
 
-      if (data.length > 0) {
-        const outdoorColor = TOOLTIP_CURSOR_COLOR
-        const outdoorLabel = t('temperature.chart.outdoorLabel')
-        chartDatasets.value = [
-          ...chartDatasets.value.filter((d) => d.label !== outdoorLabel),
-          {
-            label: outdoorLabel,
-            data,
-            borderColor: outdoorColor,
-            pointBackgroundColor: outdoorColor,
-          },
-        ]
+  async function resetZoom(): Promise<void> {
+    dateBegin.value = undefined
+    dateEnd.value = undefined
+    selectedScale.value = '1day'
+    await refreshChartData()
+  }
+
+  async function toggleRoomSelection(roomId: string): Promise<void> {
+    const index = selectedRoomIds.value.indexOf(roomId)
+    if (index > -1) selectedRoomIds.value.splice(index, 1)
+    else selectedRoomIds.value.push(roomId)
+
+    await refreshChartData()
+  }
+
+  async function changeRoomTemperature(roomId: string, delta: number): Promise<void> {
+    const status = homeStore.homeStatus
+    if (!status || !homeStore.selectedHomeId) return
+
+    const roomStatus = status.rooms?.find((room) => room.id === roomId)
+    const currentTemperature = roomStatus?.therm_setpoint_temperature ?? DEFAULT_TEMPERATURE
+    const nextTemperature = Math.round((currentTemperature + delta) * 2) / 2
+
+    try {
+      await setRoomThermpoint(homeStore.selectedHomeId, roomId, 'manual', nextTemperature)
+      if (roomStatus) {
+        roomStatus.therm_setpoint_temperature = nextTemperature
       }
     } catch (e: unknown) {
-      console.error('Outdoor temperature data error:', e)
-    } finally {
-      outdoorLoading = false
-      loading.value = false
+      setError(e instanceof Error ? e.message : t('errors.updateError'))
     }
+  }
+
+  function getValveModulesForRoom(roomId: string): TemperatureValve[] {
+    const home = homeStore.selectedHome
+    const status = homeStore.homeStatus
+    if (!home || !status) return []
+
+    return (home.modules ?? [])
+      .filter((module) => module.room_id === roomId && module.type === 'NRV')
+      .map((module) => {
+        const moduleStatus = status.modules?.find((candidate) => candidate.id === module.id)
+        return {
+          id: module.id,
+          name: module.name,
+          batteryLevel: moduleStatus?.battery_level ?? module.battery_level,
+          batteryState: moduleStatus?.battery_state || module.battery_state || '--',
+        }
+      })
+  }
+
+  function reset(): void {
+    chartRequestId += 1
+    selectedRoomIds.value = []
+    selectedScale.value = '1day'
+    dateBegin.value = undefined
+    dateEnd.value = undefined
+    chartDatasets.value = []
+    loading.value = false
+    setError(null)
   }
 
   return {
@@ -340,12 +364,11 @@ export const useTemperatureStore = defineStore('temperature', () => {
     availableScales,
     thermostatRoomIds,
     displayRooms,
-    toggleRoomSelection,
+    refreshChartData,
     setScale,
     zoomToDateRange,
     resetZoom,
-    loadChartData,
-    loadOutdoorChartData,
+    toggleRoomSelection,
     changeRoomTemperature,
     getValveModulesForRoom,
     reset,

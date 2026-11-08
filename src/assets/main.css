@@ -1,10 +1,19 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@theme {
+  --color-nebula-pink: #e05297;
+  --color-nebula-coral: #f4845f;
+  --color-nebula-mint: #6edc9f;
+  --color-nebula-line: #1e1530;
+  --color-nebula-bg: #06040e;
+  --color-nebula-text: #d8cce8;
+}
+
 body {
   font-family: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
-  background: #06040e;
-  color: #d8cce8;
+  background: var(--color-nebula-bg);
+  color: var(--color-nebula-text);
   letter-spacing: 0.01em;
 }
 
